@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Filter Flights — Poster Generator</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
@@ -232,7 +233,7 @@
       </section>
 
       <!-- ── Download ── -->
-      <button id="download-btn"
+      <button id="download-btn" onclick="downloadPoster()"
         class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded-lg transition-colors text-sm">
         ⬇ Download PNG
       </button>
@@ -420,6 +421,32 @@
         class="text-red-400 hover:text-red-600 text-sm font-bold px-1">✕</button>
     `;
     container.appendChild(row);
+  }
+
+  // ── Step 5: Download as PNG ──
+  async function downloadPoster() {
+    const btn = document.getElementById('download-btn');
+    btn.textContent = '⏳ Generating…';
+    btn.disabled = true;
+    try {
+      const poster = document.getElementById('poster');
+      const canvas = await html2canvas(poster, {
+        scale: 2,           // 2× resolution = crisp PNG
+        useCORS: true,
+        backgroundColor: null,
+        logging: false,
+      });
+      const link = document.createElement('a');
+      link.download = 'filter-flights-poster.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (err) {
+      alert('Could not generate poster. Check console for details.');
+      console.error(err);
+    } finally {
+      btn.textContent = '⬇ Download PNG';
+      btn.disabled = false;
+    }
   }
 
   // Initialise default rows
