@@ -216,7 +216,16 @@
 
         <!-- Live Preview of Selected Logo in Sidebar -->
         <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-700/60 flex items-center justify-center min-h-[50px]">
-          <img id="sidebar-logo-preview" src="airlines/malaysia-airlines.svg" alt="Selected Airline" class="max-h-9 max-w-full object-contain">
+          <img id="sidebar-logo-preview" src="airlines/malaysia-airlines.svg" alt="Selected Airline" class="max-h-12 max-w-full object-contain">
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="font-bold text-slate-300">Logo Size</label>
+            <span id="logo-size-val" class="text-[11px] text-blue-400 font-mono font-bold">85px</span>
+          </div>
+          <input id="logo-size-input" type="range" min="50" max="130" value="85" oninput="updateLogoSize(this.value)"
+            class="w-full accent-blue-500 cursor-pointer">
         </div>
 
         <div>
@@ -325,8 +334,8 @@
       <div id="poster">
 
         <!-- ══ MIDDLE EDITABLE CONTENT ══ -->
-        <!-- Placed between header bottom (~y=175) and visit website pill (~y=1215) -->
-        <div style="position: absolute; top: 172px; left: 0; width: 1080px; display: flex; flex-direction: column;">
+        <!-- Placed between header bottom and visit website pill -->
+        <div style="position: absolute; top: 154px; left: 0; width: 1080px; display: flex; flex-direction: column;">
 
           <!-- 0. Tagline -->
           <div class="tagline-text" id="p-tagline">BEST RATES FOR EVERY JOURNEY</div>
@@ -335,28 +344,28 @@
           <div class="route-capsule" id="p-r1-name">DELHI – BALI – DELHI</div>
 
           <!-- 2. Airline Logo -->
-          <div style="margin: 6px 0 5px; height: 50px; display: flex; align-items: center; justify-content: center;">
+          <div id="p-airline-logo-box" style="margin: 4px 0 3px; height: 85px; display: flex; align-items: center; justify-content: center;">
             <img id="p-airline-logo" src="airlines/malaysia-airlines.svg" alt="Airline Logo"
-              style="max-height: 48px; max-width: 380px; object-fit: contain;">
+              style="height: 85px; max-height: 85px; max-width: 460px; object-fit: contain;">
           </div>
 
           <!-- 3. Segments Bar 1 -->
           <div class="segments-bar" id="p-r1-segments"></div>
 
           <!-- 4. Date-Price Card 1 -->
-          <div class="dp-card" id="p-r1-dp" style="margin-top: 6px;"></div>
+          <div class="dp-card" id="p-r1-dp" style="margin-top: 5px;"></div>
 
           <!-- 5. Route 2 Capsule -->
-          <div class="route-capsule" id="p-r2-name" style="margin-top: 8px;">AMRITSAR – BALI – AMRITSAR</div>
+          <div class="route-capsule" id="p-r2-name" style="margin-top: 7px;">AMRITSAR – BALI – AMRITSAR</div>
 
           <!-- 6. Segments Bar 2 -->
-          <div class="segments-bar" id="p-r2-segments" style="margin-top: 6px;"></div>
+          <div class="segments-bar" id="p-r2-segments" style="margin-top: 5px;"></div>
 
           <!-- 7. Date-Price Card 2 -->
-          <div class="dp-card" id="p-r2-dp" style="margin-top: 6px;"></div>
+          <div class="dp-card" id="p-r2-dp" style="margin-top: 5px;"></div>
 
           <!-- 8. Baggage Capsule -->
-          <div class="baggage-capsule" id="p-baggage" style="margin-top: 8px;">BAGGAGE: 30KG + 7KG</div>
+          <div class="baggage-capsule" id="p-baggage" style="margin-top: 7px;">BAGGAGE: 30KG + 7KG</div>
 
         </div>
         <!-- /middle -->
@@ -475,6 +484,17 @@
       document.getElementById('p-baggage').textContent = document.getElementById('baggage-text').value;
     }
 
+    function updateLogoSize(size) {
+      document.getElementById('logo-size-val').textContent = size + 'px';
+      const box = document.getElementById('p-airline-logo-box');
+      const img = document.getElementById('p-airline-logo');
+      if (box && img) {
+        box.style.height = size + 'px';
+        img.style.height = size + 'px';
+        img.style.maxHeight = size + 'px';
+      }
+    }
+
     function handleAirlineSelect(src) {
       document.getElementById('p-airline-logo').src = src;
       document.getElementById('sidebar-logo-preview').src = src;
@@ -499,6 +519,8 @@
       document.getElementById('baggage-text').value = defaultData.baggage;
       document.getElementById('airline-select').value = defaultData.airline;
       handleAirlineSelect(defaultData.airline);
+      document.getElementById('logo-size-input').value = 85;
+      updateLogoSize(85);
 
       const r1SegInputs = document.querySelectorAll('#r1-segments input');
       defaultData.r1Segs.forEach((val, idx) => { if (r1SegInputs[idx]) r1SegInputs[idx].value = val; });
