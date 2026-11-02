@@ -211,7 +211,7 @@
       <!-- ── Airline Logo ── -->
       <section class="space-y-2">
         <h2 class="text-xs font-bold uppercase tracking-wider text-blue-700 border-b border-blue-100 pb-1">Airline Logo</h2>
-        <input id="airline-logo-input" type="file" accept="image/*"
+        <input id="airline-logo-input" type="file" accept="image/*" onchange="handleLogoUpload(this)"
           class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
         <p class="text-xs text-gray-400">Defaults to placeholder if no file uploaded</p>
       </section>
@@ -474,6 +474,21 @@
         <span class="dp-date">${r.date}</span>
         <span class="dp-price">${r.price}</span>
       </div>`).join('');
+  }
+
+  // ── Step 4: Airline logo upload ──
+  function handleLogoUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById('p-airline-logo');
+      const txt = document.getElementById('p-airline-logo-text');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      txt.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
   }
 </script>
 </html>
