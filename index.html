@@ -157,19 +157,19 @@
         <h2 class="text-xs font-bold uppercase tracking-wider text-blue-700 border-b border-blue-100 pb-1">Route 1</h2>
         <div>
           <label class="text-xs font-semibold text-gray-600">Route Title</label>
-          <input id="r1-name" type="text" value="DELHI – BALI – DELHI"
+          <input id="r1-name" type="text" value="DELHI – BALI – DELHI" oninput="renderPoster()"
             class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-400">
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-600">Flight Segments</label>
           <div class="mt-1 space-y-1" id="r1-segments">
-            <input type="text" value="MH 191 DEL-KUL | 23:00 – 06:55"
+            <input type="text" value="MH 191 DEL-KUL | 23:00 – 06:55" oninput="renderPoster()"
               class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05"
+            <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()"
               class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 714 DPS-KUL | 13:05 – 16:00"
+            <input type="text" value="MH 714 DPS-KUL | 13:05 – 16:00" oninput="renderPoster()"
               class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 190 KUL-DEL | 18:50 – 21:50"
+            <input type="text" value="MH 190 KUL-DEL | 18:50 – 21:50" oninput="renderPoster()"
               class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
           </div>
         </div>
@@ -185,19 +185,19 @@
         <h2 class="text-xs font-bold uppercase tracking-wider text-blue-700 border-b border-blue-100 pb-1">Route 2</h2>
         <div>
           <label class="text-xs font-semibold text-gray-600">Route Title</label>
-          <input id="r2-name" type="text" value="AMRITSAR – BALI – AMRITSAR"
+          <input id="r2-name" type="text" value="AMRITSAR – BALI – AMRITSAR" oninput="renderPoster()"
             class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-400">
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-600">Flight Segments</label>
           <div class="mt-1 space-y-1" id="r2-segments">
-            <input type="text" value="MH 119 ATQ-KUL | 23:15 – 06:10"
+            <input type="text" value="MH 119 ATQ-KUL | 23:15 – 06:10" oninput="renderPoster()"
               class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05"
+            <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()"
               class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 714 DPS-KUL | 12:55 – 16:00"
+            <input type="text" value="MH 714 DPS-KUL | 12:55 – 16:00" oninput="renderPoster()"
               class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 118 KUL-ATQ | 17:15 – 20:40"
+            <input type="text" value="MH 118 KUL-ATQ | 17:15 – 20:40" oninput="renderPoster()"
               class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
           </div>
         </div>
@@ -221,12 +221,12 @@
         <h2 class="text-xs font-bold uppercase tracking-wider text-blue-700 border-b border-blue-100 pb-1">Extras</h2>
         <div>
           <label class="text-xs font-semibold text-gray-600">Baggage Text</label>
-          <input id="baggage-text" type="text" value="BAGGAGE: 30KG + 7KG"
+          <input id="baggage-text" type="text" value="BAGGAGE: 30KG + 7KG" oninput="renderPoster()"
             class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-400">
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-600">CTA Pill Text</label>
-          <input id="cta-text" type="text" value="Visit our website for Special I Fares"
+          <input id="cta-text" type="text" value="Visit our website for Special I Fares" oninput="renderPoster()"
             class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-400">
         </div>
       </section>
@@ -424,7 +424,56 @@
 
   // Initialise default rows
   [1, 2].forEach(r => defaultRows[r].forEach(([d, p]) => addRow(r, d, p)));
+  renderPoster();
 
-  function renderPoster() { /* wired in Step 3 */ }
+  function renderPoster() {
+    // Route names
+    document.getElementById('p-r1-name').textContent = document.getElementById('r1-name').value;
+    document.getElementById('p-r2-name').textContent = document.getElementById('r2-name').value;
+
+    // Segments
+    document.getElementById('p-r1-segments').innerHTML = buildSegments(getSegments(1));
+    document.getElementById('p-r2-segments').innerHTML = buildSegments(getSegments(2));
+
+    // Date-price rows
+    document.getElementById('p-r1-dp').innerHTML = buildRows(getRows(1));
+    document.getElementById('p-r2-dp').innerHTML  = buildRows(getRows(2));
+
+    // Baggage & CTA
+    document.getElementById('p-baggage').textContent = document.getElementById('baggage-text').value;
+    document.getElementById('p-cta').innerHTML =
+      `<span>🌐</span><span>${document.getElementById('cta-text').value}</span>`;
+  }
+
+  function getSegments(route) {
+    return Array.from(document.querySelectorAll(`#r${route}-segments input`)).map(inp => {
+      const [code = '', time = ''] = inp.value.split('|');
+      return { code: code.trim(), time: time.trim() };
+    });
+  }
+
+  function buildSegments(segs) {
+    return segs.map((s, i) => `
+      ${i > 0 ? '<div class="seg-divider"></div>' : ''}
+      <div class="segment-item">
+        <div style="font-weight:800;">${s.code}</div>
+        <div style="font-weight:600;color:#1a3a7e;">${s.time}</div>
+      </div>`).join('');
+  }
+
+  function getRows(route) {
+    return Array.from(document.querySelectorAll(`#r${route}-rows > div`)).map(row => {
+      const [a, b] = row.querySelectorAll('input');
+      return { date: a?.value || '', price: b?.value || '' };
+    });
+  }
+
+  function buildRows(rows) {
+    return rows.map(r => `
+      <div class="dp-row">
+        <span class="dp-date">${r.date}</span>
+        <span class="dp-price">${r.price}</span>
+      </div>`).join('');
+  }
 </script>
 </html>
