@@ -11,6 +11,131 @@
     body { font-family: 'Barlow', sans-serif; }
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 4px; }
+
+    /* ── Poster base ── */
+    #poster {
+      width: 680px;
+      font-family: 'Barlow Condensed', sans-serif;
+      background: linear-gradient(180deg,
+        #3db2d8 0%, #55c0de 8%, #79cfe6 18%,
+        #a8dcee 32%, #c4e9f5 50%, #ccedf8 62%,
+        #b8e3f2 75%, #9fd6ec 88%, #8ecae6 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Cloud blobs */
+    .cloud-blob {
+      position: absolute;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0) 68%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* Route banner (dark navy pill) */
+    .route-banner {
+      background: linear-gradient(90deg, #091d6a 0%, #0f246e 50%, #091d6a 100%);
+      border-radius: 50px;
+      padding: 10px 28px;
+      color: #fff;
+      font-size: 30px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 1.5px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Segments bar */
+    .segments-bar {
+      background: rgba(180, 225, 245, 0.55);
+      border: 1px solid rgba(120, 185, 215, 0.5);
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 7px 14px;
+    }
+    .segment-item {
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #091d6a;
+      line-height: 1.3;
+    }
+    .seg-divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(9,29,106,0.3);
+      flex-shrink: 0;
+    }
+
+    /* Date-Price box */
+    .dp-box {
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .dp-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 0;
+    }
+    .dp-date {
+      font-size: 19px;
+      font-weight: 800;
+      color: #0d1f5c;
+      letter-spacing: 0.3px;
+    }
+    .dp-price {
+      background: #1a56db;
+      color: #fff;
+      font-size: 19px;
+      font-weight: 800;
+      border-radius: 7px;
+      padding: 2px 18px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Baggage banner */
+    .baggage-banner {
+      background: linear-gradient(90deg, #091d6a 0%, #0f246e 50%, #091d6a 100%);
+      border-radius: 50px;
+      padding: 10px 28px;
+      color: #fff;
+      font-size: 24px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 1.5px;
+    }
+
+    /* CTA pill */
+    .cta-pill {
+      background: #fff;
+      border-radius: 50px;
+      padding: 8px 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #0d1f5c;
+      border: 2px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    /* Tagline */
+    .poster-tagline {
+      font-size: 16px;
+      font-style: italic;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1.5px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.18);
+      text-transform: uppercase;
+      margin: 4px 0 10px;
+    }
   </style>
 </head>
 <body class="bg-slate-200 h-screen flex overflow-hidden text-gray-800">
@@ -120,9 +245,144 @@
   <!-- ════════════════════════════════════ -->
   <main class="flex-1 overflow-auto flex items-start justify-center py-8 px-6 bg-slate-200">
     <div id="poster-wrapper" class="shadow-2xl rounded-xl overflow-hidden">
-      <div id="poster" style="width:680px; min-height:900px; background:#87ceeb; display:flex; align-items:center; justify-content:center;">
-        <p style="color:rgba(255,255,255,0.8); font-size:14px;">Poster design loads in next step…</p>
-      </div>
+      <div id="poster">
+
+        <!-- Cloud blobs (decorative background) -->
+        <div class="cloud-blob" style="width:340px;height:180px;top:-30px;left:-60px;"></div>
+        <div class="cloud-blob" style="width:220px;height:130px;top:10px;right:20px;opacity:0.6;"></div>
+        <div class="cloud-blob" style="width:300px;height:140px;bottom:110px;left:-40px;opacity:0.55;"></div>
+        <div class="cloud-blob" style="width:400px;height:170px;bottom:60px;right:-80px;opacity:0.65;"></div>
+
+        <!-- ════════════ HEADER (LOCKED) ════════════ -->
+        <div style="padding:16px 22px 6px;display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2;">
+
+          <!-- Filter Flights Logo -->
+          <div style="display:flex;align-items:center;gap:9px;">
+            <div style="background:#1a56db;border-radius:9px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" fill="white"/>
+              </svg>
+            </div>
+            <div style="line-height:1;font-family:'Barlow',sans-serif;">
+              <span style="font-size:21px;font-weight:900;color:#1a1a2e;letter-spacing:0.5px;">FILTER </span><span style="font-size:21px;font-weight:900;color:#1a56db;letter-spacing:0.5px;">FLIGHTS</span>
+            </div>
+          </div>
+
+          <!-- Why Choose Us -->
+          <div style="text-align:right;color:#091d6a;font-family:'Barlow Condensed',sans-serif;">
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-bottom:5px;">
+              <span style="font-size:15px;opacity:0.7;">✈</span>
+              <span style="font-weight:800;font-size:13px;letter-spacing:0.5px;">WHY CHOOSE US?</span>
+            </div>
+            <div style="font-size:12px;font-weight:600;line-height:1.8;">
+              <div>Flight deals &nbsp;<strong style="color:#1a56db;">✔</strong></div>
+              <div>Travel offers &nbsp;<strong style="color:#1a56db;">✔</strong></div>
+              <div>Budget flights &nbsp;<strong style="color:#1a56db;">✔</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════ MIDDLE (EDITABLE) ════════════ -->
+        <div style="padding:0 18px;position:relative;z-index:2;">
+
+          <!-- Tagline -->
+          <p class="poster-tagline">Best Rates For Every Journey</p>
+
+          <!-- ── ROUTE 1 ── -->
+          <div class="route-banner" id="p-r1-name">DELHI – BALI – DELHI</div>
+
+          <!-- Airline Logo -->
+          <div style="text-align:center;margin:10px 0 6px;">
+            <img id="p-airline-logo" src="" alt="Airline" style="max-height:52px;display:none;margin:auto;object-fit:contain;">
+            <div id="p-airline-logo-text" style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:#cc0001;font-style:italic;letter-spacing:-0.5px;display:flex;align-items:center;justify-content:center;gap:6px;">
+              <span>malaysia</span>
+              <svg width="36" height="28" viewBox="0 0 60 45" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 5 L55 25 L30 22 L30 38 L22 30 L30 5Z" fill="#cc0001"/>
+                <path d="M30 5 L5 25 L30 22 L30 38 L38 30 L30 5Z" fill="#cc0001" opacity="0.7"/>
+              </svg>
+              <span>airlines</span>
+            </div>
+          </div>
+
+          <!-- Segments R1 -->
+          <div class="segments-bar" id="p-r1-segments" style="margin:6px 0 8px;"></div>
+
+          <!-- Date-Price Box R1 -->
+          <div class="dp-box" id="p-r1-dp"></div>
+
+          <!-- ── ROUTE 2 ── -->
+          <div style="margin-top:12px;">
+            <div class="route-banner" id="p-r2-name">AMRITSAR – BALI – AMRITSAR</div>
+            <!-- Segments R2 -->
+            <div class="segments-bar" id="p-r2-segments" style="margin:6px 0 8px;"></div>
+            <!-- Date-Price Box R2 -->
+            <div class="dp-box" id="p-r2-dp"></div>
+          </div>
+
+          <!-- Baggage -->
+          <div class="baggage-banner" id="p-baggage" style="margin:12px 0 8px;">BAGGAGE: 30KG + 7KG</div>
+
+          <!-- CTA Pill + decorative lines -->
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,transparent,rgba(9,29,106,0.3));"></div>
+            <div class="cta-pill" id="p-cta">
+              <span>🌐</span>
+              <span>Visit our website for Special I Fares</span>
+            </div>
+            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,rgba(9,29,106,0.3),transparent);"></div>
+          </div>
+
+        </div>
+
+        <!-- ════════════ FOOTER (LOCKED) ════════════ -->
+        <div style="position:relative;min-height:130px;overflow:hidden;">
+
+          <!-- Airplane SVG -->
+          <div style="position:absolute;right:-10px;bottom:28px;width:310px;opacity:0.97;z-index:1;">
+            <svg viewBox="0 0 340 130" xmlns="http://www.w3.org/2000/svg">
+              <!-- Fuselage -->
+              <ellipse cx="160" cy="68" rx="148" ry="19" fill="white" stroke="#d0d8e8" stroke-width="1.5"/>
+              <!-- Nose cone -->
+              <path d="M 298 60 Q 330 68 298 76 Z" fill="white" stroke="#d0d8e8" stroke-width="1"/>
+              <!-- Tail fin -->
+              <path d="M 15 68 Q 12 55 25 45 L 42 60 Z" fill="#e8eef5" stroke="#c8d4e0" stroke-width="1"/>
+              <!-- Horizontal tail stabilizer -->
+              <path d="M 20 68 L 55 68 L 65 52 L 72 52 L 62 68 L 75 68" fill="#f0f4fa" stroke="#ccd6e2" stroke-width="1"/>
+              <!-- Main wing -->
+              <path d="M 110 68 L 175 68 L 218 12 L 232 12 L 192 68 L 270 68" fill="#eef2f8" stroke="#ccd6e2" stroke-width="1.2"/>
+              <!-- Engine pod -->
+              <ellipse cx="210" cy="68" rx="16" ry="7" fill="#e0e8f0" stroke="#c0ccd8" stroke-width="1"/>
+              <!-- Windows row -->
+              <g fill="#b8d8f0">
+                <rect x="128" y="60" width="9" height="10" rx="3"/>
+                <rect x="143" y="60" width="9" height="10" rx="3"/>
+                <rect x="158" y="60" width="9" height="10" rx="3"/>
+                <rect x="173" y="60" width="9" height="10" rx="3"/>
+                <rect x="188" y="60" width="9" height="10" rx="3"/>
+                <rect x="203" y="60" width="9" height="10" rx="3"/>
+                <rect x="218" y="60" width="9" height="10" rx="3"/>
+                <rect x="233" y="60" width="9" height="10" rx="3"/>
+                <rect x="248" y="60" width="9" height="10" rx="3"/>
+                <rect x="263" y="60" width="9" height="10" rx="3"/>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Contact Info -->
+          <div style="position:relative;z-index:2;padding:85px 0 16px;display:flex;align-items:center;justify-content:center;gap:22px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#0d1f5c;">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <span style="font-size:20px;">📞</span>
+              <span>+91 78887-00692</span>
+            </div>
+            <div style="width:1.5px;height:22px;background:#0d1f5c;opacity:0.35;"></div>
+            <div style="display:flex;align-items:center;gap:7px;">
+              <span style="font-size:20px;">🌐</span>
+              <span>www.filterflights.com</span>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /#poster -->
     </div>
   </main>
 
