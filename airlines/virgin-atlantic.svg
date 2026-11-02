@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 50" width="170" height="50">
+  <g transform="translate(8, 10)">
+    <!-- Virgin Ribbon Loop / Badge -->
+    <path d="M5 26 C2 18, 5 7, 16 6 C24 5, 27 14, 23 21 C19 28, 9 27, 7 21 C5 14, 11 10, 18 10" fill="none" stroke="#D90026" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <text x="42" y="26" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14.5" font-weight="900" fill="#D90026" letter-spacing="-0.5">virgin</text>
+  <text x="82" y="26" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#4A4A4A" letter-spacing="0.5">atlantic</text>
+  <text x="43" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="7.5" font-weight="700" fill="#D90026" letter-spacing="1">FLY WITHOUT ORDINARY</text>
+</svg>

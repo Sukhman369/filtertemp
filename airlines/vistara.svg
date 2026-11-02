@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 50" width="170" height="50">
+  <g transform="translate(10, 9)">
+    <!-- Vistara 8-Point Yantra Star -->
+    <circle cx="16" cy="16" r="14" fill="#582C4D"/>
+    <!-- 8 pointed star in Gold -->
+    <polygon points="16,4 19,13 28,16 19,19 16,28 13,19 4,16 13,13" fill="#C5A059"/>
+    <polygon points="16,8 18,14 24,16 18,18 16,24 14,18 8,16 14,14" fill="#FFFFFF" opacity="0.6"/>
+  </g>
+  <text x="46" y="27" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="900" fill="#582C4D" letter-spacing="0.5">Vistara</text>
+  <text x="47" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="7.5" font-weight="700" fill="#C5A059" letter-spacing="2">FLY THE NEW FEELING</text>
+</svg>

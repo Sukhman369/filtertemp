@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 50" width="170" height="50">
+  <g transform="translate(10, 9)">
+    <!-- Lufthansa Crane Disc -->
+    <circle cx="16" cy="16" r="15" fill="#05164D" stroke="#FFAB00" stroke-width="1.5"/>
+    <path d="M7 19 L13 15 L25 10 L21 16 L27 18 L21 19 L15 21 L12 24 Z" fill="#FFAB00"/>
+  </g>
+  <text x="48" y="31" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="900" fill="#05164D" letter-spacing="0.5">Lufthansa</text>
+</svg>

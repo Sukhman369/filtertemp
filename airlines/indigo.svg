@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 50" width="170" height="50">
+  <g transform="translate(10, 11)">
+    <!-- IndiGo Airplane Dot Matrix Grid -->
+    <circle cx="6" cy="14" r="2.5" fill="#001B94"/>
+    <circle cx="12" cy="14" r="2.5" fill="#001B94"/>
+    <circle cx="18" cy="14" r="2.5" fill="#001B94"/>
+    <circle cx="24" cy="14" r="2.5" fill="#001B94"/>
+    <circle cx="12" cy="8" r="2.5" fill="#001B94"/>
+    <circle cx="18" cy="8" r="2.5" fill="#ED7014"/>
+    <circle cx="12" cy="20" r="2.5" fill="#001B94"/>
+    <circle cx="18" cy="20" r="2.5" fill="#001B94"/>
+  </g>
+  <text x="44" y="27" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16.5" font-weight="900" fill="#001B94" letter-spacing="-0.5">IndiGo</text>
+  <text x="45" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="7.5" font-weight="700" fill="#ED7014" letter-spacing="1.5">GO INDIGO</text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 50" width="170" height="50">
+  <g transform="translate(8, 10)">
+    <!-- Cathay Pacific Brushwing -->
+    <path d="M4 22 C14 18, 24 10, 30 2 C25 8, 16 14, 8 18 C16 16, 24 12, 28 8 C22 13, 14 17, 4 22 Z" fill="#006564"/>
+    <rect x="0" y="2" width="32" height="26" rx="4" fill="#006564" opacity="0.12"/>
+  </g>
+  <text x="44" y="26" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="900" fill="#006564" letter-spacing="1.5">CATHAY</text>
+  <text x="44" y="37" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" fill="#2E3131" letter-spacing="2">PACIFIC</text>
+</svg>

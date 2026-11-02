@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 50" width="170" height="50">
+  <g transform="translate(10, 8)">
+    <!-- Gulf Air Golden Falcon Wing -->
+    <path d="M16 4 C24 8, 28 17, 24 28 C21 21, 16 16, 9 14 C15 14, 18 19, 18 24 C14 20, 10 18, 5 18 C10 13, 14 8, 16 4 Z" fill="#C5A059"/>
+    <circle cx="21" cy="9" r="2.5" fill="#C5A059"/>
+  </g>
+  <text x="46" y="27" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="900" fill="#1E252B" letter-spacing="1.5">GULF AIR</text>
+  <text x="47" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="7.5" font-weight="700" fill="#C5A059" letter-spacing="2">KINGDOM OF BAHRAIN</text>
+</svg>

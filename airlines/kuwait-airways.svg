@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 50" width="170" height="50">
+  <g transform="translate(8, 9)">
+    <!-- Kuwait Airways Stylized Bird Disc -->
+    <circle cx="16" cy="16" r="15" fill="#003366"/>
+    <path d="M7 16 C12 11, 20 10, 26 12 C23 15, 17 17, 10 18 Z" fill="#0099DA"/>
+    <path d="M10 20 C15 17, 21 17, 25 21 C20 22, 14 23, 8 23 Z" fill="#FFFFFF"/>
+  </g>
+  <text x="45" y="26" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="900" fill="#003366" letter-spacing="1">KUWAIT</text>
+  <text x="45" y="37" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="700" fill="#0099DA" letter-spacing="2">AIRWAYS</text>
+</svg>
