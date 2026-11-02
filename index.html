@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Barlow:wght@600;700;800;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Barlow:wght@600;700;800;900&family=Caveat:wght@700&family=Pacifico&family=Yellowtail&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Barlow', sans-serif; background: #0b1329; height: 100vh; overflow: hidden; color: #1e293b; }
@@ -158,8 +158,8 @@
 
     /* ── TEMPLATE 2 SPECIFIC STYLES ── */
     .t2-script {
-      font-family: 'Caveat', cursive;
-      font-size: 92px;
+      font-family: 'Yellowtail', 'Pacifico', 'Caveat', cursive;
+      font-size: 104px;
       font-weight: 700;
       color: #fc8b15;
       line-height: 0.9;
@@ -1054,13 +1054,42 @@
     renderTemplate2();
 
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('template') === '2' || window.location.hash === '#t2') {
-      switchTemplate(2);
+    const exportMode = urlParams.get('export');
+    if (exportMode) {
+      const tNum = parseInt(exportMode, 10) || 1;
+      switchTemplate(tNum);
+      const aside = document.querySelector('aside');
+      if (aside) aside.style.display = 'none';
+      const main = document.querySelector('main');
+      if (main) {
+        main.style.padding = '0';
+        main.style.margin = '0';
+        main.style.alignItems = 'flex-start';
+        main.style.justifyContent = 'flex-start';
+      }
+      document.body.style.overflow = 'hidden';
+      document.body.style.background = '#ffffff';
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      const wrapper = document.getElementById('poster-scale-wrapper');
+      if (wrapper) {
+        wrapper.style.transform = 'none';
+        wrapper.style.position = 'fixed';
+        wrapper.style.top = '0';
+        wrapper.style.left = '0';
+        wrapper.style.width = '1080px';
+        wrapper.style.height = '1440px';
+        wrapper.style.margin = '0';
+        wrapper.style.boxShadow = 'none';
+      }
+    } else {
+      if (urlParams.get('template') === '2' || window.location.hash === '#t2') {
+        switchTemplate(2);
+      }
+      window.addEventListener('resize', fitPosterToScreen);
+      document.fonts.ready.then(fitPosterToScreen);
+      setTimeout(fitPosterToScreen, 100);
     }
-
-    window.addEventListener('resize', fitPosterToScreen);
-    document.fonts.ready.then(fitPosterToScreen);
-    setTimeout(fitPosterToScreen, 100);
   </script>
 </body>
 </html>
