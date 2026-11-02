@@ -1,531 +1,491 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Filter Flights — Poster Generator</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,600;1,700;1,800;1,900&family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    body { font-family: 'Barlow', sans-serif; }
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 4px; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Barlow',sans-serif;background:#cbd5e1;height:100vh;display:flex;overflow:hidden;color:#1e293b;}
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-thumb{background:#93c5fd;border-radius:4px;}
 
-    /* ── Poster scale-to-fit ── */
-    #poster-wrapper {
-      transform-origin: top center;
-    }
-
-    /* ── Poster base ── */
-    #poster {
-      width: 680px;
-      font-family: 'Barlow Condensed', sans-serif;
-      background: linear-gradient(180deg,
-        #3db2d8 0%, #55c0de 8%, #79cfe6 18%,
-        #a8dcee 32%, #c4e9f5 50%, #ccedf8 62%,
-        #b8e3f2 75%, #9fd6ec 88%, #8ecae6 100%);
-      position: relative;
-      overflow: hidden;
+    /* ══ POSTER ══ */
+    #poster{
+      width:680px;
+      position:relative;
+      overflow:hidden;
+      font-family:'Barlow Condensed',sans-serif;
+      background:linear-gradient(165deg,
+        #2aa6cc 0%,#38b0d4 6%,#55bcd9 12%,
+        #70c8e0 20%,#8dd3e8 30%,#a8dcee 40%,
+        #bce5f3 50%,#c8eaf6 58%,#ccedf8 65%,
+        #bce5f2 74%,#a8dcec 82%,#96d3e8 90%,#82c8e2 100%);
     }
 
-    /* Cloud blobs */
-    .cloud-blob {
-      position: absolute;
-      background: radial-gradient(ellipse, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0) 68%);
-      border-radius: 50%;
-      pointer-events: none;
+    /* sky white-glow at top-center */
+    #poster::after{
+      content:'';
+      position:absolute;
+      top:-60px; left:50%;
+      transform:translateX(-50%);
+      width:500px; height:300px;
+      background:radial-gradient(ellipse,rgba(255,255,255,0.55) 0%,transparent 70%);
+      pointer-events:none; z-index:0;
     }
 
-    /* Route banner (dark navy pill) */
-    .route-banner {
-      background: linear-gradient(90deg, #091d6a 0%, #0f246e 50%, #091d6a 100%);
-      border-radius: 50px;
-      padding: 10px 28px;
-      color: #fff;
-      font-size: 30px;
-      font-weight: 800;
-      text-align: center;
-      letter-spacing: 1.5px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    #poster-inner{position:relative;z-index:1;}
+
+    /* Dark navy pill banner */
+    .route-banner{
+      background:linear-gradient(180deg,#0e2d96 0%,#071e6b 55%,#0a2480 100%);
+      border-radius:60px;
+      padding:11px 28px;
+      text-align:center;
+      color:#fff;
+      font-size:33px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      text-shadow:0 2px 6px rgba(0,0,0,0.35);
+      border:2px solid rgba(255,255,255,0.12);
     }
 
-    /* Segments bar */
-    .segments-bar {
-      background: rgba(180, 225, 245, 0.55);
-      border: 1px solid rgba(120, 185, 215, 0.5);
-      border-radius: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 7px 14px;
+    /* Flight segment pill bar */
+    .seg-bar{
+      background:rgba(210,238,250,0.62);
+      border:1.5px solid rgba(150,205,230,0.55);
+      border-radius:50px;
+      display:flex;align-items:center;
+      padding:7px 12px;
+      gap:0;
     }
-    .segment-item {
-      text-align: center;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: #091d6a;
-      line-height: 1.3;
+    .seg-item{
+      flex:1;text-align:center;
+      font-size:11.5px;font-weight:700;
+      color:#0a1f6e;line-height:1.4;
+      padding:0 4px;
     }
-    .seg-divider {
-      width: 1px;
-      height: 28px;
-      background: rgba(9,29,106,0.3);
-      flex-shrink: 0;
+    .seg-item span{display:block;font-weight:600;font-size:10.5px;color:#1a3d8a;}
+    .seg-div{width:1px;height:30px;background:rgba(10,31,110,0.28);flex-shrink:0;}
+
+    /* White date-price card */
+    .dp-card{
+      background:#fff;
+      border-radius:16px;
+      padding:13px 20px 10px;
+      box-shadow:0 3px 12px rgba(0,0,0,0.09);
+      border:1.5px solid rgba(220,235,245,0.8);
+    }
+    .dp-row{
+      display:flex;align-items:center;
+      justify-content:space-between;
+      padding:2px 0;
+    }
+    .dp-date{
+      font-size:19.5px;font-weight:800;
+      color:#071e6b;letter-spacing:0.4px;
+    }
+    .dp-price{
+      background:linear-gradient(135deg,#1a52d6 0%,#1440b8 100%);
+      color:#fff;
+      font-size:19.5px;font-weight:800;
+      border-radius:7px;
+      padding:3px 18px;
+      min-width:118px;
+      text-align:center;
+      letter-spacing:0.3px;
     }
 
-    /* Date-Price box */
-    .dp-box {
-      background: #fff;
-      border-radius: 14px;
-      padding: 14px 22px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    }
-    .dp-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 3px 0;
-    }
-    .dp-date {
-      font-size: 19px;
-      font-weight: 800;
-      color: #0d1f5c;
-      letter-spacing: 0.3px;
-    }
-    .dp-price {
-      background: #1a56db;
-      color: #fff;
-      font-size: 19px;
-      font-weight: 800;
-      border-radius: 7px;
-      padding: 2px 18px;
-      letter-spacing: 0.5px;
-    }
-
-    /* Baggage banner */
-    .baggage-banner {
-      background: linear-gradient(90deg, #091d6a 0%, #0f246e 50%, #091d6a 100%);
-      border-radius: 50px;
-      padding: 10px 28px;
-      color: #fff;
-      font-size: 24px;
-      font-weight: 800;
-      text-align: center;
-      letter-spacing: 1.5px;
+    /* Baggage banner - same navy style */
+    .baggage-banner{
+      background:linear-gradient(180deg,#0e2d96 0%,#071e6b 55%,#0a2480 100%);
+      border-radius:60px;
+      padding:11px 28px;
+      text-align:center;
+      color:#fff;
+      font-size:27px;font-weight:900;
+      letter-spacing:2px;text-transform:uppercase;
+      border:2px solid rgba(255,255,255,0.12);
     }
 
     /* CTA pill */
-    .cta-pill {
-      background: #fff;
-      border-radius: 50px;
-      padding: 8px 22px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 15px;
-      font-weight: 700;
-      color: #0d1f5c;
-      border: 2px solid #e2e8f0;
-      white-space: nowrap;
-    }
-
-    /* Tagline */
-    .poster-tagline {
-      font-size: 16px;
-      font-style: italic;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: 1.5px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.18);
-      text-transform: uppercase;
-      margin: 4px 0 10px;
+    .cta-pill{
+      background:#fff;
+      border-radius:50px;
+      padding:9px 22px;
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:16px;font-weight:700;
+      color:#071e6b;
+      white-space:nowrap;
+      border:2px solid rgba(180,210,240,0.7);
+      box-shadow:0 2px 8px rgba(0,0,0,0.08);
     }
   </style>
 </head>
-<body class="bg-slate-200 h-screen flex overflow-hidden text-gray-800">
+<body>
 
-  <!-- ════════════════════════════════════ -->
-  <!--  LEFT PANEL — Form Controls         -->
-  <!-- ════════════════════════════════════ -->
-  <aside class="w-80 bg-white shadow-xl overflow-y-auto flex-shrink-0 flex flex-col h-full">
+<!-- ═══════════════════════════════════ -->
+<!--  LEFT PANEL — Controls             -->
+<!-- ═══════════════════════════════════ -->
+<aside style="width:295px;background:#fff;box-shadow:2px 0 14px rgba(0,0,0,0.12);overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column;height:100vh;">
 
-    <div class="sticky top-0 z-10 bg-blue-700 px-4 py-3 text-white">
-      <h1 class="text-lg font-bold">🎨 Poster Editor</h1>
-      <p class="text-xs text-blue-200">Changes update live</p>
+  <div style="background:#1d4ed8;padding:14px 16px;position:sticky;top:0;z-index:10;">
+    <div style="color:#fff;font-size:17px;font-weight:800;">🎨 Poster Editor</div>
+    <div style="color:#bfdbfe;font-size:11px;margin-top:2px;">Changes reflect live on the right</div>
+  </div>
+
+  <div style="padding:14px;display:flex;flex-direction:column;gap:16px;padding-bottom:32px;">
+
+    <!-- Route 1 -->
+    <div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1d4ed8;border-bottom:1px solid #dbeafe;padding-bottom:4px;margin-bottom:8px;">Route 1</div>
+      <label style="font-size:11px;font-weight:600;color:#475569;">Route Title</label>
+      <input id="r1-name" type="text" value="DELHI – BALI – DELHI" oninput="renderPoster()"
+        style="margin-top:3px;width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;font-size:12px;outline:none;">
+      <label style="font-size:11px;font-weight:600;color:#475569;margin-top:8px;display:block;">Flight Segments</label>
+      <div id="r1-segments" style="margin-top:3px;display:flex;flex-direction:column;gap:3px;">
+        <input type="text" value="MH 191 DEL-KUL | 23:00 – 06:55" oninput="renderPoster()" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;font-size:11px;outline:none;">
+        <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;font-size:11px;outline:none;">
+        <input type="text" value="MH 714 DPS-KUL | 13:05 – 16:00" oninput="renderPoster()" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;font-size:11px;outline:none;">
+        <input type="text" value="MH 190 KUL-DEL | 18:50 – 21:50" oninput="renderPoster()" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;font-size:11px;outline:none;">
+      </div>
+      <label style="font-size:11px;font-weight:600;color:#475569;margin-top:8px;display:block;">Date – Price Rows</label>
+      <div id="r1-rows" style="margin-top:3px;display:flex;flex-direction:column;gap:3px;"></div>
+      <button onclick="addRow(1)" style="margin-top:5px;font-size:11px;color:#1d4ed8;font-weight:700;cursor:pointer;background:none;border:none;">+ Add Row</button>
     </div>
 
-    <div class="p-4 space-y-5 pb-10">
-
-      <!-- ── Route 1 ── -->
-      <section class="space-y-2">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-blue-700 border-b border-blue-100 pb-1">Route 1</h2>
-        <div>
-          <label class="text-xs font-semibold text-gray-600">Route Title</label>
-          <input id="r1-name" type="text" value="DELHI – BALI – DELHI" oninput="renderPoster()"
-            class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-400">
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-gray-600">Flight Segments</label>
-          <div class="mt-1 space-y-1" id="r1-segments">
-            <input type="text" value="MH 191 DEL-KUL | 23:00 – 06:55" oninput="renderPoster()"
-              class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()"
-              class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 714 DPS-KUL | 13:05 – 16:00" oninput="renderPoster()"
-              class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 190 KUL-DEL | 18:50 – 21:50" oninput="renderPoster()"
-              class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-gray-600">Date – Price Rows</label>
-          <div class="mt-1 space-y-1" id="r1-rows"></div>
-          <button onclick="addRow(1)" class="mt-1 text-xs text-blue-600 hover:underline font-semibold">+ Add Row</button>
-        </div>
-      </section>
-
-      <!-- ── Route 2 ── -->
-      <section class="space-y-2">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-blue-700 border-b border-blue-100 pb-1">Route 2</h2>
-        <div>
-          <label class="text-xs font-semibold text-gray-600">Route Title</label>
-          <input id="r2-name" type="text" value="AMRITSAR – BALI – AMRITSAR" oninput="renderPoster()"
-            class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-400">
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-gray-600">Flight Segments</label>
-          <div class="mt-1 space-y-1" id="r2-segments">
-            <input type="text" value="MH 119 ATQ-KUL | 23:15 – 06:10" oninput="renderPoster()"
-              class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()"
-              class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 714 DPS-KUL | 12:55 – 16:00" oninput="renderPoster()"
-              class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-            <input type="text" value="MH 118 KUL-ATQ | 17:15 – 20:40" oninput="renderPoster()"
-              class="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400">
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-gray-600">Date – Price Rows</label>
-          <div class="mt-1 space-y-1" id="r2-rows"></div>
-          <button onclick="addRow(2)" class="mt-1 text-xs text-blue-600 hover:underline font-semibold">+ Add Row</button>
-        </div>
-      </section>
-
-      <!-- ── Airline Logo ── -->
-      <section class="space-y-2">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-blue-700 border-b border-blue-100 pb-1">Airline Logo</h2>
-        <input id="airline-logo-input" type="file" accept="image/*" onchange="handleLogoUpload(this)"
-          class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-        <p class="text-xs text-gray-400">Defaults to placeholder if no file uploaded</p>
-      </section>
-
-      <!-- ── Extras ── -->
-      <section class="space-y-2">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-blue-700 border-b border-blue-100 pb-1">Extras</h2>
-        <div>
-          <label class="text-xs font-semibold text-gray-600">Baggage Text</label>
-          <input id="baggage-text" type="text" value="BAGGAGE: 30KG + 7KG" oninput="renderPoster()"
-            class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-400">
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-gray-600">CTA Pill Text</label>
-          <input id="cta-text" type="text" value="Visit our website for Special I Fares" oninput="renderPoster()"
-            class="mt-1 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-400">
-        </div>
-      </section>
-
-      <!-- ── Download ── -->
-      <button id="download-btn" onclick="downloadPoster()"
-        class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded-lg transition-colors text-sm">
-        ⬇ Download PNG
-      </button>
-
+    <!-- Route 2 -->
+    <div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1d4ed8;border-bottom:1px solid #dbeafe;padding-bottom:4px;margin-bottom:8px;">Route 2</div>
+      <label style="font-size:11px;font-weight:600;color:#475569;">Route Title</label>
+      <input id="r2-name" type="text" value="AMRITSAR – BALI – AMRITSAR" oninput="renderPoster()"
+        style="margin-top:3px;width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;font-size:12px;outline:none;">
+      <label style="font-size:11px;font-weight:600;color:#475569;margin-top:8px;display:block;">Flight Segments</label>
+      <div id="r2-segments" style="margin-top:3px;display:flex;flex-direction:column;gap:3px;">
+        <input type="text" value="MH 119 ATQ-KUL | 23:15 – 06:10" oninput="renderPoster()" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;font-size:11px;outline:none;">
+        <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;font-size:11px;outline:none;">
+        <input type="text" value="MH 714 DPS-KUL | 12:55 – 16:00" oninput="renderPoster()" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;font-size:11px;outline:none;">
+        <input type="text" value="MH 118 KUL-ATQ | 17:15 – 20:40" oninput="renderPoster()" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;font-size:11px;outline:none;">
+      </div>
+      <label style="font-size:11px;font-weight:600;color:#475569;margin-top:8px;display:block;">Date – Price Rows</label>
+      <div id="r2-rows" style="margin-top:3px;display:flex;flex-direction:column;gap:3px;"></div>
+      <button onclick="addRow(2)" style="margin-top:5px;font-size:11px;color:#1d4ed8;font-weight:700;cursor:pointer;background:none;border:none;">+ Add Row</button>
     </div>
-  </aside>
 
-  <!-- ════════════════════════════════════ -->
-  <!--  RIGHT PANEL — Live Preview         -->
-  <!-- ════════════════════════════════════ -->
-  <main class="flex-1 overflow-auto flex items-start justify-center py-8 px-6 bg-slate-200">
-    <div id="poster-wrapper" class="shadow-2xl rounded-xl overflow-hidden">
-      <div id="poster">
+    <!-- Airline Logo -->
+    <div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1d4ed8;border-bottom:1px solid #dbeafe;padding-bottom:4px;margin-bottom:8px;">Airline Logo</div>
+      <input id="airline-logo-input" type="file" accept="image/*" onchange="handleLogoUpload(this)"
+        style="width:100%;font-size:11px;color:#64748b;">
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px;">Leave empty to use placeholder text</div>
+    </div>
 
-        <!-- Cloud blobs (decorative background) -->
-        <div class="cloud-blob" style="width:340px;height:180px;top:-30px;left:-60px;"></div>
-        <div class="cloud-blob" style="width:220px;height:130px;top:10px;right:20px;opacity:0.6;"></div>
-        <div class="cloud-blob" style="width:300px;height:140px;bottom:110px;left:-40px;opacity:0.55;"></div>
-        <div class="cloud-blob" style="width:400px;height:170px;bottom:60px;right:-80px;opacity:0.65;"></div>
+    <!-- Extras -->
+    <div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1d4ed8;border-bottom:1px solid #dbeafe;padding-bottom:4px;margin-bottom:8px;">Extras</div>
+      <label style="font-size:11px;font-weight:600;color:#475569;">Baggage Text</label>
+      <input id="baggage-text" type="text" value="BAGGAGE: 30KG + 7KG" oninput="renderPoster()"
+        style="margin-top:3px;width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;font-size:12px;outline:none;">
+      <label style="font-size:11px;font-weight:600;color:#475569;margin-top:8px;display:block;">CTA Pill Text</label>
+      <input id="cta-text" type="text" value="Visit our website for Special I Fares" oninput="renderPoster()"
+        style="margin-top:3px;width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;font-size:12px;outline:none;">
+    </div>
 
-        <!-- ════════════ HEADER (LOCKED) ════════════ -->
-        <div style="padding:16px 22px 6px;display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2;">
+    <!-- Download -->
+    <button id="download-btn" onclick="downloadPoster()"
+      style="width:100%;background:#1d4ed8;color:#fff;font-weight:800;padding:11px;border-radius:10px;font-size:13px;cursor:pointer;border:none;transition:background .2s;"
+      onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#1d4ed8'">
+      ⬇ Download PNG
+    </button>
+
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════ -->
+<!--  RIGHT PANEL — Live Preview        -->
+<!-- ═══════════════════════════════════ -->
+<main style="flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:32px 20px;background:#cbd5e1;">
+  <div id="poster-wrapper" style="transform-origin:top center;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+
+    <div id="poster">
+
+      <!-- ── CLOUD SVG LAYER ── -->
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"
+        viewBox="0 0 680 960" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <!-- TOP LEFT large cloud mass -->
+        <ellipse cx="90"  cy="95"  rx="115" ry="72"  fill="rgba(255,255,255,0.82)"/>
+        <ellipse cx="200" cy="68"  rx="95"  ry="58"  fill="rgba(255,255,255,0.75)"/>
+        <ellipse cx="290" cy="85"  rx="80"  ry="52"  fill="rgba(255,255,255,0.65)"/>
+        <ellipse cx="30"  cy="105" rx="70"  ry="48"  fill="rgba(255,255,255,0.72)"/>
+        <ellipse cx="160" cy="112" rx="140" ry="45"  fill="rgba(255,255,255,0.60)"/>
+        <!-- small wispy top-right -->
+        <ellipse cx="560" cy="50"  rx="60"  ry="35"  fill="rgba(255,255,255,0.38)"/>
+        <ellipse cx="630" cy="65"  rx="55"  ry="32"  fill="rgba(255,255,255,0.32)"/>
+        <!-- BOTTOM cloud mass -->
+        <ellipse cx="100" cy="870" rx="180" ry="90"  fill="rgba(255,255,255,0.72)"/>
+        <ellipse cx="30"  cy="910" rx="120" ry="65"  fill="rgba(255,255,255,0.65)"/>
+        <ellipse cx="220" cy="900" rx="140" ry="70"  fill="rgba(255,255,255,0.55)"/>
+        <ellipse cx="560" cy="855" rx="190" ry="95"  fill="rgba(255,255,255,0.68)"/>
+        <ellipse cx="680" cy="890" rx="150" ry="75"  fill="rgba(255,255,255,0.60)"/>
+        <ellipse cx="410" cy="910" rx="160" ry="65"  fill="rgba(255,255,255,0.50)"/>
+        <!-- mid right faint glow -->
+        <ellipse cx="640" cy="420" rx="80"  ry="55"  fill="rgba(255,255,255,0.22)"/>
+      </svg>
+
+      <div id="poster-inner" style="position:relative;z-index:1;">
+
+        <!-- ════ HEADER (LOCKED) ════ -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:16px 20px 10px;">
 
           <!-- Filter Flights Logo -->
           <div style="display:flex;align-items:center;gap:9px;">
-            <div style="background:#1a56db;border-radius:9px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" fill="white"/>
+            <div style="background:#1d4ed8;border-radius:9px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(29,78,216,0.4);">
+              <!-- Airplane icon -->
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" fill="white"/>
               </svg>
             </div>
-            <div style="line-height:1;font-family:'Barlow',sans-serif;">
-              <span style="font-size:21px;font-weight:900;color:#1a1a2e;letter-spacing:0.5px;">FILTER </span><span style="font-size:21px;font-weight:900;color:#1a56db;letter-spacing:0.5px;">FLIGHTS</span>
+            <div style="font-family:'Barlow',sans-serif;line-height:1.05;">
+              <span style="font-size:22px;font-weight:900;color:#1e293b;letter-spacing:0.3px;">FILTER </span><span style="font-size:22px;font-weight:900;color:#1d4ed8;letter-spacing:0.3px;">FLIGHTS</span>
             </div>
           </div>
 
           <!-- Why Choose Us -->
-          <div style="text-align:right;color:#091d6a;font-family:'Barlow Condensed',sans-serif;">
-            <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-bottom:5px;">
-              <span style="font-size:15px;opacity:0.7;">✈</span>
-              <span style="font-weight:800;font-size:13px;letter-spacing:0.5px;">WHY CHOOSE US?</span>
+          <div style="text-align:right;color:#071e6b;font-family:'Barlow Condensed',sans-serif;">
+            <!-- Dashed line + droplet icon (decorative) -->
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:5px;margin-bottom:5px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#1d4ed8" opacity="0.7"/>
+              </svg>
+              <span style="font-weight:800;font-size:13.5px;letter-spacing:0.5px;">WHY CHOOSE US?</span>
             </div>
-            <div style="font-size:12px;font-weight:600;line-height:1.8;">
-              <div>Flight deals &nbsp;<strong style="color:#1a56db;">✔</strong></div>
-              <div>Travel offers &nbsp;<strong style="color:#1a56db;">✔</strong></div>
-              <div>Budget flights &nbsp;<strong style="color:#1a56db;">✔</strong></div>
+            <div style="font-size:12.5px;font-weight:600;line-height:1.9;">
+              <div style="display:flex;align-items:center;justify-content:flex-end;gap:5px;">
+                <span>Flight deals</span>
+                <svg width="16" height="16" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#1d4ed8"/><path d="M6 10l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:flex-end;gap:5px;">
+                <span>Travel offers</span>
+                <svg width="16" height="16" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#1d4ed8"/><path d="M6 10l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:flex-end;gap:5px;">
+                <span>Budget flights</span>
+                <svg width="16" height="16" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#1d4ed8"/><path d="M6 10l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- ════════════ MIDDLE (EDITABLE) ════════════ -->
-        <div style="padding:0 18px;position:relative;z-index:2;">
+        <!-- ════ MIDDLE (EDITABLE) ════ -->
+        <div style="padding:0 16px;">
 
           <!-- Tagline -->
-          <p class="poster-tagline">Best Rates For Every Journey</p>
+          <p style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-style:italic;font-weight:700;color:#fff;letter-spacing:2px;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,0.2);margin:2px 0 8px 4px;">
+            Best Rates For Every Journey
+          </p>
 
-          <!-- ── ROUTE 1 ── -->
+          <!-- ROUTE 1 -->
           <div class="route-banner" id="p-r1-name">DELHI – BALI – DELHI</div>
 
           <!-- Airline Logo -->
           <div style="text-align:center;margin:10px 0 6px;">
-            <img id="p-airline-logo" src="" alt="Airline" style="max-height:52px;display:none;margin:auto;object-fit:contain;">
-            <div id="p-airline-logo-text" style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:#cc0001;font-style:italic;letter-spacing:-0.5px;display:flex;align-items:center;justify-content:center;gap:6px;">
-              <span>malaysia</span>
-              <svg width="36" height="28" viewBox="0 0 60 45" xmlns="http://www.w3.org/2000/svg">
-                <path d="M30 5 L55 25 L30 22 L30 38 L22 30 L30 5Z" fill="#cc0001"/>
-                <path d="M30 5 L5 25 L30 22 L30 38 L38 30 L30 5Z" fill="#cc0001" opacity="0.7"/>
+            <img id="p-airline-logo" src="" alt="Airline" style="max-height:56px;display:none;margin:auto;object-fit:contain;">
+            <!-- Malaysia Airlines style placeholder -->
+            <div id="p-airline-logo-text" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+              <div style="font-family:'Barlow Condensed',sans-serif;text-align:center;line-height:1.1;">
+                <div style="font-size:30px;font-weight:900;color:#c8102e;font-style:italic;letter-spacing:-0.5px;">malaysia</div>
+                <div style="font-size:14px;font-weight:600;color:#555;letter-spacing:1px;">airlines</div>
+              </div>
+              <!-- Wau Bulan-style icon (simplified) -->
+              <svg width="44" height="44" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40 8 L72 40 L40 58 L40 8Z" fill="#c8102e"/>
+                <path d="M40 8 L8 40 L40 58 L40 8Z" fill="#1d4ed8"/>
+                <path d="M10 42 Q40 72 70 42 Q40 68 10 42Z" fill="#c8102e" opacity="0.7"/>
               </svg>
-              <span>airlines</span>
             </div>
           </div>
 
           <!-- Segments R1 -->
-          <div class="segments-bar" id="p-r1-segments" style="margin:6px 0 8px;"></div>
+          <div class="seg-bar" id="p-r1-segments" style="margin:6px 0 8px;"></div>
 
-          <!-- Date-Price Box R1 -->
-          <div class="dp-box" id="p-r1-dp"></div>
+          <!-- Date-Price Card R1 -->
+          <div class="dp-card" id="p-r1-dp" style="margin-bottom:10px;"></div>
 
-          <!-- ── ROUTE 2 ── -->
-          <div style="margin-top:12px;">
-            <div class="route-banner" id="p-r2-name">AMRITSAR – BALI – AMRITSAR</div>
-            <!-- Segments R2 -->
-            <div class="segments-bar" id="p-r2-segments" style="margin:6px 0 8px;"></div>
-            <!-- Date-Price Box R2 -->
-            <div class="dp-box" id="p-r2-dp"></div>
-          </div>
+          <!-- ROUTE 2 -->
+          <div class="route-banner" id="p-r2-name">AMRITSAR – BALI – AMRITSAR</div>
+
+          <!-- Segments R2 -->
+          <div class="seg-bar" id="p-r2-segments" style="margin:6px 0 8px;"></div>
+
+          <!-- Date-Price Card R2 -->
+          <div class="dp-card" id="p-r2-dp" style="margin-bottom:10px;"></div>
 
           <!-- Baggage -->
-          <div class="baggage-banner" id="p-baggage" style="margin:12px 0 8px;">BAGGAGE: 30KG + 7KG</div>
+          <div class="baggage-banner" id="p-baggage" style="margin-bottom:10px;">BAGGAGE: 30KG + 7KG</div>
 
-          <!-- CTA Pill + decorative lines -->
+          <!-- CTA Pill + lines -->
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,transparent,rgba(9,29,106,0.3));"></div>
+            <div style="flex:1;height:2px;background:linear-gradient(90deg,transparent,rgba(9,33,120,0.35));border-radius:1px;"></div>
             <div class="cta-pill" id="p-cta">
-              <span>🌐</span>
-              <span>Visit our website for Special I Fares</span>
+              <!-- Globe icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span id="p-cta-text">Visit our website for Special I Fares</span>
             </div>
-            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,rgba(9,29,106,0.3),transparent);"></div>
+            <div style="flex:1;height:2px;background:linear-gradient(90deg,rgba(9,33,120,0.35),transparent);border-radius:1px;"></div>
           </div>
 
         </div>
 
-        <!-- ════════════ FOOTER (LOCKED) ════════════ -->
-        <div style="position:relative;min-height:130px;overflow:hidden;">
+        <!-- ════ FOOTER (LOCKED) ════ -->
+        <div style="position:relative;min-height:148px;overflow:hidden;">
 
-          <!-- Airplane SVG -->
-          <div style="position:absolute;right:-10px;bottom:28px;width:310px;opacity:0.97;z-index:1;">
-            <svg viewBox="0 0 340 130" xmlns="http://www.w3.org/2000/svg">
-              <!-- Fuselage -->
-              <ellipse cx="160" cy="68" rx="148" ry="19" fill="white" stroke="#d0d8e8" stroke-width="1.5"/>
-              <!-- Nose cone -->
-              <path d="M 298 60 Q 330 68 298 76 Z" fill="white" stroke="#d0d8e8" stroke-width="1"/>
-              <!-- Tail fin -->
-              <path d="M 15 68 Q 12 55 25 45 L 42 60 Z" fill="#e8eef5" stroke="#c8d4e0" stroke-width="1"/>
-              <!-- Horizontal tail stabilizer -->
-              <path d="M 20 68 L 55 68 L 65 52 L 72 52 L 62 68 L 75 68" fill="#f0f4fa" stroke="#ccd6e2" stroke-width="1"/>
-              <!-- Main wing -->
-              <path d="M 110 68 L 175 68 L 218 12 L 232 12 L 192 68 L 270 68" fill="#eef2f8" stroke="#ccd6e2" stroke-width="1.2"/>
-              <!-- Engine pod -->
-              <ellipse cx="210" cy="68" rx="16" ry="7" fill="#e0e8f0" stroke="#c0ccd8" stroke-width="1"/>
-              <!-- Windows row -->
-              <g fill="#b8d8f0">
-                <rect x="128" y="60" width="9" height="10" rx="3"/>
-                <rect x="143" y="60" width="9" height="10" rx="3"/>
-                <rect x="158" y="60" width="9" height="10" rx="3"/>
-                <rect x="173" y="60" width="9" height="10" rx="3"/>
-                <rect x="188" y="60" width="9" height="10" rx="3"/>
-                <rect x="203" y="60" width="9" height="10" rx="3"/>
-                <rect x="218" y="60" width="9" height="10" rx="3"/>
-                <rect x="233" y="60" width="9" height="10" rx="3"/>
-                <rect x="248" y="60" width="9" height="10" rx="3"/>
-                <rect x="263" y="60" width="9" height="10" rx="3"/>
-              </g>
-            </svg>
-          </div>
+          <!-- Realistic commercial airplane SVG -->
+          <svg style="position:absolute;right:-8px;bottom:36px;width:340px;z-index:2;" viewBox="0 0 380 145" xmlns="http://www.w3.org/2000/svg">
+            <!-- Main fuselage -->
+            <path d="M 32 72 Q 32 56 48 52 L 340 52 Q 368 52 372 64 Q 376 70 372 78 Q 368 84 340 84 L 48 88 Q 32 86 32 72 Z" fill="white" stroke="#dde4ee" stroke-width="1.2"/>
+            <!-- Nose cone -->
+            <path d="M 340 52 Q 372 55 375 64 Q 378 70 375 76 Q 372 82 340 84 Z" fill="#f5f7fa" stroke="#dde4ee" stroke-width="1"/>
+            <!-- Tail fin (vertical) -->
+            <path d="M 46 52 L 40 30 Q 38 18 50 18 L 68 18 Q 78 18 80 28 L 78 52 Z" fill="#eff3fa" stroke="#dde4ee" stroke-width="1.2"/>
+            <!-- Horizontal tail stabilizer left -->
+            <path d="M 48 82 L 55 82 L 65 104 L 80 104 L 70 82 L 90 82" fill="#f0f4fb" stroke="#dde4ee" stroke-width="1"/>
+            <!-- Horizontal tail stabilizer right (small) -->
+            <path d="M 55 54 L 62 54 L 68 36 L 80 36 L 74 54 L 85 54" fill="#f0f4fb" stroke="#dde4ee" stroke-width="1"/>
+            <!-- Main wing -->
+            <path d="M 145 66 L 200 66 L 255 8 L 275 8 L 222 66 L 310 66" fill="#eef2f9" stroke="#cdd5e8" stroke-width="1.3"/>
+            <path d="M 145 72 L 200 72 L 255 130 L 275 130 L 222 72 L 310 72" fill="#eef2f9" stroke="#cdd5e8" stroke-width="1.2" opacity="0.5"/>
+            <!-- Engine pod left (under wing) -->
+            <ellipse cx="230" cy="72" rx="22" ry="9" fill="#e4eaf5" stroke="#c8d2e8" stroke-width="1.2"/>
+            <ellipse cx="220" cy="72" rx="10" ry="9" fill="#dce4f0" stroke="#c8d2e8" stroke-width="1"/>
+            <!-- Engine pod right (optional) -->
+            <ellipse cx="175" cy="72" rx="18" ry="8" fill="#e4eaf5" stroke="#c8d2e8" stroke-width="1" opacity="0.7"/>
+            <!-- Windows strip -->
+            <g fill="#b8d6f0" rx="2">
+              <rect x="118" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="133" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="148" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="163" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="178" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="193" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="208" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="223" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="238" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="253" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="268" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="283" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="298" y="60" width="9" height="11" rx="2.5"/>
+              <rect x="313" y="60" width="9" height="11" rx="2.5"/>
+            </g>
+            <!-- Landing gear (front) -->
+            <line x1="310" y1="84" x2="314" y2="98" stroke="#c0ccd8" stroke-width="2"/>
+            <ellipse cx="314" cy="99" rx="6" ry="3" fill="#b8c4d0"/>
+            <!-- Landing gear (rear) -->
+            <line x1="170" y1="84" x2="168" y2="100" stroke="#c0ccd8" stroke-width="2"/>
+            <ellipse cx="167" cy="101" rx="7" ry="3.5" fill="#b8c4d0"/>
+          </svg>
 
-          <!-- Contact Info -->
-          <div style="position:relative;z-index:2;padding:85px 0 16px;display:flex;align-items:center;justify-content:center;gap:22px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#0d1f5c;">
-            <div style="display:flex;align-items:center;gap:7px;">
-              <span style="font-size:20px;">📞</span>
+          <!-- Contact info -->
+          <div style="position:relative;z-index:3;padding:88px 0 14px;display:flex;align-items:center;justify-content:center;gap:24px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#071e6b;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <!-- Phone circle icon -->
+              <div style="width:28px;height:28px;border-radius:50%;background:#071e6b;display:flex;align-items:center;justify-content:center;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.01z"/></svg>
+              </div>
               <span>+91 78887-00692</span>
             </div>
-            <div style="width:1.5px;height:22px;background:#0d1f5c;opacity:0.35;"></div>
-            <div style="display:flex;align-items:center;gap:7px;">
-              <span style="font-size:20px;">🌐</span>
+            <div style="width:1.5px;height:22px;background:#071e6b;opacity:0.3;"></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <!-- Globe circle icon -->
+              <div style="width:28px;height:28px;border-radius:50%;background:#071e6b;display:flex;align-items:center;justify-content:center;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </div>
               <span>www.filterflights.com</span>
             </div>
           </div>
 
         </div>
-      </div><!-- /#poster -->
-    </div>
-  </main>
+        <!-- /footer -->
 
-</body>
+      </div><!-- /poster-inner -->
+    </div><!-- /poster -->
+  </div><!-- /poster-wrapper -->
+</main>
+
 <script>
   const defaultRows = {
-    1: [
-      ["16 JAN – 23 JAN", "₹49,999"],
-      ["20 JAN – 27 JAN", "₹52,999"],
-      ["23 JAN – 30 JAN", "₹52,999"],
-      ["30 JAN – 06 FEB", "₹51,999"],
-      ["10 FEB – 17 FEB", "₹49,999"],
-      ["17 FEB – 24 FEB", "₹48,999"],
-      ["20 FEB – 27 FEB", "₹48,999"],
-      ["27 FEB – 06 MAR", "₹48,999"],
+    1:[
+      ["16 JAN – 23 JAN","₹49,999"],["20 JAN – 27 JAN","₹52,999"],
+      ["23 JAN – 30 JAN","₹52,999"],["30 JAN – 06 FEB","₹51,999"],
+      ["10 FEB – 17 FEB","₹49,999"],["17 FEB – 24 FEB","₹48,999"],
+      ["20 FEB – 27 FEB","₹48,999"],["27 FEB – 06 MAR","₹48,999"],
     ],
-    2: [
-      ["03 DEC – 10 DEC", "₹49,999"],
-      ["10 DEC – 17 DEC", "₹52,999"],
+    2:[
+      ["03 DEC – 10 DEC","₹49,999"],["10 DEC – 17 DEC","₹52,999"],
     ]
   };
 
-  function addRow(route, date = "", price = "") {
-    const container = document.getElementById(`r${route}-rows`);
-    const row = document.createElement('div');
-    row.className = 'flex gap-1 items-center';
-    row.innerHTML = `
-      <input type="text" placeholder="e.g. 16 JAN – 23 JAN" value="${date}"
-        class="flex-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400"
-        oninput="renderPoster()">
-      <input type="text" placeholder="₹00,000" value="${price}"
-        class="w-20 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400"
-        oninput="renderPoster()">
-      <button onclick="this.parentElement.remove(); renderPoster();"
-        class="text-red-400 hover:text-red-600 text-sm font-bold px-1">✕</button>
-    `;
-    container.appendChild(row);
+  function addRow(route, date="", price="") {
+    const c = document.getElementById(`r${route}-rows`);
+    const d = document.createElement('div');
+    d.style.cssText = 'display:flex;gap:4px;align-items:center;';
+    d.innerHTML = `
+      <input type="text" placeholder="e.g. 16 JAN – 23 JAN" value="${date}" oninput="renderPoster()"
+        style="flex:1;border:1px solid #e2e8f0;border-radius:6px;padding:4px 7px;font-size:11px;outline:none;">
+      <input type="text" placeholder="₹00,000" value="${price}" oninput="renderPoster()"
+        style="width:72px;border:1px solid #e2e8f0;border-radius:6px;padding:4px 7px;font-size:11px;outline:none;">
+      <button onclick="this.parentElement.remove();renderPoster();"
+        style="color:#ef4444;font-weight:800;font-size:13px;background:none;border:none;cursor:pointer;line-height:1;padding:0 2px;">✕</button>`;
+    c.appendChild(d);
   }
 
-  // ── Step 5: Download as PNG ──
-  async function downloadPoster() {
-    const btn = document.getElementById('download-btn');
-    btn.textContent = '⏳ Generating…';
-    btn.disabled = true;
-    try {
-      const poster = document.getElementById('poster');
-      const canvas = await html2canvas(poster, {
-        scale: 2,           // 2× resolution = crisp PNG
-        useCORS: true,
-        backgroundColor: null,
-        logging: false,
-      });
-      const link = document.createElement('a');
-      link.download = 'filter-flights-poster.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    } catch (err) {
-      alert('Could not generate poster. Check console for details.');
-      console.error(err);
-    } finally {
-      btn.textContent = '⬇ Download PNG';
-      btn.disabled = false;
-    }
-  }
-
-  // ── Step 6: Auto-scale poster to fit the preview panel ──
-  function scalePoster() {
-    const wrapper = document.getElementById('poster-wrapper');
-    const main = wrapper.parentElement;
-    const available = main.clientWidth - 48; // 48px padding
-    const posterW = 680;
-    const scale = Math.min(1, available / posterW);
-    wrapper.style.transform = `scale(${scale})`;
-    wrapper.style.marginBottom = `-${posterW * (1 - scale) * 0.5}px`;
-  }
-
-  window.addEventListener('resize', scalePoster);
-
-  // Initialise default rows
-  [1, 2].forEach(r => defaultRows[r].forEach(([d, p]) => addRow(r, d, p)));
-  renderPoster();
-  scalePoster();
-
-  function renderPoster() {
-    // Route names
-    document.getElementById('p-r1-name').textContent = document.getElementById('r1-name').value;
-    document.getElementById('p-r2-name').textContent = document.getElementById('r2-name').value;
-
-    // Segments
-    document.getElementById('p-r1-segments').innerHTML = buildSegments(getSegments(1));
-    document.getElementById('p-r2-segments').innerHTML = buildSegments(getSegments(2));
-
-    // Date-price rows
-    document.getElementById('p-r1-dp').innerHTML = buildRows(getRows(1));
-    document.getElementById('p-r2-dp').innerHTML  = buildRows(getRows(2));
-
-    // Baggage & CTA
-    document.getElementById('p-baggage').textContent = document.getElementById('baggage-text').value;
-    document.getElementById('p-cta').innerHTML =
-      `<span>🌐</span><span>${document.getElementById('cta-text').value}</span>`;
-  }
-
-  function getSegments(route) {
-    return Array.from(document.querySelectorAll(`#r${route}-segments input`)).map(inp => {
-      const [code = '', time = ''] = inp.value.split('|');
-      return { code: code.trim(), time: time.trim() };
+  function getSegs(route) {
+    return Array.from(document.querySelectorAll(`#r${route}-segments input`)).map(i => {
+      const [code='',time=''] = i.value.split('|');
+      return {code:code.trim(), time:time.trim()};
     });
   }
 
-  function buildSegments(segs) {
-    return segs.map((s, i) => `
-      ${i > 0 ? '<div class="seg-divider"></div>' : ''}
-      <div class="segment-item">
-        <div style="font-weight:800;">${s.code}</div>
-        <div style="font-weight:600;color:#1a3a7e;">${s.time}</div>
+  function buildSegs(segs) {
+    return segs.map((s,i) => `
+      ${i>0?'<div class="seg-div"></div>':''}
+      <div class="seg-item">
+        <strong>${s.code}</strong>
+        <span>${s.time}</span>
       </div>`).join('');
   }
 
   function getRows(route) {
     return Array.from(document.querySelectorAll(`#r${route}-rows > div`)).map(row => {
-      const [a, b] = row.querySelectorAll('input');
-      return { date: a?.value || '', price: b?.value || '' };
+      const [a,b] = row.querySelectorAll('input');
+      return {date:a?.value||'', price:b?.value||''};
     });
   }
 
   function buildRows(rows) {
-    return rows.map(r => `
+    return rows.map(r=>`
       <div class="dp-row">
         <span class="dp-date">${r.date}</span>
         <span class="dp-price">${r.price}</span>
       </div>`).join('');
   }
 
-  // ── Step 4: Airline logo upload ──
+  function renderPoster() {
+    document.getElementById('p-r1-name').textContent = document.getElementById('r1-name').value;
+    document.getElementById('p-r2-name').textContent = document.getElementById('r2-name').value;
+    document.getElementById('p-r1-segments').innerHTML = buildSegs(getSegs(1));
+    document.getElementById('p-r2-segments').innerHTML = buildSegs(getSegs(2));
+    document.getElementById('p-r1-dp').innerHTML = buildRows(getRows(1));
+    document.getElementById('p-r2-dp').innerHTML  = buildRows(getRows(2));
+    document.getElementById('p-baggage').textContent = document.getElementById('baggage-text').value;
+    document.getElementById('p-cta-text').textContent = document.getElementById('cta-text').value;
+  }
+
   function handleLogoUpload(input) {
-    const file = input.files[0];
-    if (!file) return;
+    const file = input.files[0]; if(!file) return;
     const reader = new FileReader();
     reader.onload = e => {
       const img = document.getElementById('p-airline-logo');
@@ -536,5 +496,46 @@
     };
     reader.readAsDataURL(file);
   }
+
+  async function downloadPoster() {
+    const btn = document.getElementById('download-btn');
+    btn.textContent = '⏳ Generating…'; btn.disabled = true;
+    try {
+      const poster = document.getElementById('poster');
+      // Temporarily restore natural scale for capture
+      const wrapper = document.getElementById('poster-wrapper');
+      const prev = wrapper.style.transform;
+      wrapper.style.transform = 'none';
+      const canvas = await html2canvas(poster, {scale:2, useCORS:true, backgroundColor:null, logging:false});
+      wrapper.style.transform = prev;
+      const a = document.createElement('a');
+      a.download = 'filter-flights-poster.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    } catch(e) {
+      alert('Error generating. See console.'); console.error(e);
+    } finally {
+      btn.textContent = '⬇ Download PNG'; btn.disabled = false;
+    }
+  }
+
+  function scalePoster() {
+    const wrapper = document.getElementById('poster-wrapper');
+    const main = wrapper.parentElement;
+    const avail = main.clientWidth - 40;
+    const scale = Math.min(1, avail / 680);
+    wrapper.style.transform = `scale(${scale})`;
+    const poster = document.getElementById('poster');
+    const naturalH = poster.offsetHeight;
+    wrapper.parentElement.style.minHeight = (naturalH * scale + 40) + 'px';
+  }
+
+  // Init
+  [1,2].forEach(r => defaultRows[r].forEach(([d,p]) => addRow(r,d,p)));
+  renderPoster();
+  window.addEventListener('resize', scalePoster);
+  // Wait for fonts then scale
+  document.fonts.ready.then(scalePoster);
 </script>
+</body>
 </html>
