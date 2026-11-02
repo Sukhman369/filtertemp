@@ -16,17 +16,25 @@
     ::-webkit-scrollbar-track { background: #0b1329; }
     ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
 
-    /* ══ NATIVE 1080x1440 CANVAS USING filterflights.png ══ */
-    #poster {
+    /* ══ NATIVE 1080x1440 CANVAS BASE ══ */
+    .poster-canvas {
       width: 1080px;
       height: 1440px;
       position: relative;
       overflow: hidden;
       font-family: 'Barlow Condensed', sans-serif;
-      background: url('filterflights.png') no-repeat top left;
-      background-size: 1080px 1440px;
       user-select: none;
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+    }
+
+    #poster-t1 {
+      background: url('filterflights.png') no-repeat top left;
+      background-size: 1080px 1440px;
+    }
+
+    #poster-t2 {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      display: none;
     }
 
     /* Tagline */
@@ -164,153 +172,201 @@
   <!-- ═══════════════════════════════════════ -->
   <aside class="w-96 bg-slate-900 border-r border-slate-800 h-screen flex flex-col flex-shrink-0 z-20">
     <!-- Header -->
-    <div class="px-5 py-4 bg-gradient-to-r from-blue-700 to-indigo-800 text-white flex items-center justify-between border-b border-blue-600/40">
+    <div class="px-5 py-3.5 bg-gradient-to-r from-blue-700 to-indigo-800 text-white flex items-center justify-between border-b border-blue-600/40">
       <div>
         <h1 class="text-base font-extrabold tracking-wide flex items-center gap-2">
           <span>✈️</span> Filter Flights Editor
         </h1>
-        <p class="text-xs text-blue-200 mt-0.5">Template Poster Generator</p>
+        <p class="text-[11px] text-blue-200">Multi-Template Generator</p>
       </div>
       <button onclick="resetDefaults()" title="Reset to Original Values" class="text-xs bg-white/20 hover:bg-white/30 px-2.5 py-1 rounded font-bold transition">
         Reset
       </button>
     </div>
 
-    <!-- Scrollable Controls -->
+    <!-- ══ TEMPLATE SELECTOR TABS ══ -->
+    <div class="p-3 bg-slate-950 border-b border-slate-800">
+      <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+        <span>Active Template</span>
+        <span id="active-template-badge" class="text-blue-400 font-mono">Template 1</span>
+      </div>
+      <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-900 rounded-lg border border-slate-800">
+        <button id="tab-btn-1" onclick="switchTemplate(1)"
+          class="py-2 px-2 rounded-md font-extrabold text-xs text-center transition bg-blue-600 text-white shadow-md flex items-center justify-center gap-1.5">
+          <span>🎨</span> Template 1
+        </button>
+        <button id="tab-btn-2" onclick="switchTemplate(2)"
+          class="py-2 px-2 rounded-md font-extrabold text-xs text-center transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center gap-1.5">
+          <span>✨</span> Template 2
+        </button>
+      </div>
+    </div>
+
+    <!-- Scrollable Controls Container -->
     <div class="flex-1 overflow-y-auto px-5 py-4 space-y-4 text-slate-200 text-xs">
 
-      <!-- ── Airline Selection Block ── -->
-      <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
-        <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
-          <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Airline Selection</span>
-          <span class="text-[10px] text-slate-400">From /airlines/ folder</span>
-        </div>
-        <div>
-          <label class="font-bold text-slate-300 block mb-1">Choose Airline Logo</label>
-          <select id="airline-select" onchange="handleAirlineSelect(this.value)"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold cursor-pointer">
-            <option value="airlines/malaysia-airlines.svg" selected>Malaysia Airlines</option>
-            <option value="airlines/air-india.svg">Air India</option>
-            <option value="airlines/indigo.svg">IndiGo</option>
-            <option value="airlines/vistara.svg">Vistara</option>
-            <option value="airlines/emirates.svg">Emirates</option>
-            <option value="airlines/qatar-airways.svg">Qatar Airways</option>
-            <option value="airlines/singapore-airlines.svg">Singapore Airlines</option>
-            <option value="airlines/thai-airways.svg">Thai Airways</option>
-            <option value="airlines/british-airways.svg">British Airways</option>
-            <option value="airlines/lufthansa.svg">Lufthansa</option>
-            <option value="airlines/air-france.svg">Air France</option>
-            <option value="airlines/etihad-airways.svg">Etihad Airways</option>
-            <option value="airlines/cathay-pacific.svg">Cathay Pacific</option>
-            <option value="airlines/japan-airlines.svg">Japan Airlines</option>
-            <option value="airlines/gulf-air.svg">Gulf Air</option>
-            <option value="airlines/kuwait-airways.svg">Kuwait Airways</option>
-            <option value="airlines/oman-air.svg">Oman Air</option>
-            <option value="airlines/air-canada.svg">Air Canada</option>
-            <option value="airlines/united-airlines.svg">United Airlines</option>
-            <option value="airlines/american-airlines.svg">American Airlines</option>
-            <option value="airlines/delta-air-lines.svg">Delta Air Lines</option>
-            <option value="airlines/virgin-atlantic.svg">Virgin Atlantic</option>
-          </select>
-        </div>
+      <!-- ═══════════════════════════════════ -->
+      <!--  CONTROLS: TEMPLATE 1              -->
+      <!-- ═══════════════════════════════════ -->
+      <div id="controls-template-1" class="space-y-4">
 
-        <!-- Live Preview of Selected Logo in Sidebar -->
-        <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-700/60 flex items-center justify-center min-h-[50px]">
-          <img id="sidebar-logo-preview" src="airlines/malaysia-airlines.svg" alt="Selected Airline" class="max-h-12 max-w-full object-contain">
-        </div>
-
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <label class="font-bold text-slate-300">Logo Size</label>
-            <span id="logo-size-val" class="text-[11px] text-blue-400 font-mono font-bold">85px</span>
+        <!-- ── Airline Selection Block ── -->
+        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+            <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Airline Selection</span>
+            <span class="text-[10px] text-slate-400">From /airlines/</span>
           </div>
-          <input id="logo-size-input" type="range" min="50" max="130" value="85" oninput="updateLogoSize(this.value)"
-            class="w-full accent-blue-500 cursor-pointer">
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Choose Airline Logo</label>
+            <select id="airline-select" onchange="handleAirlineSelect(this.value)"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold cursor-pointer">
+              <option value="airlines/malaysia-airlines.svg" selected>Malaysia Airlines</option>
+              <option value="airlines/air-india.svg">Air India</option>
+              <option value="airlines/indigo.svg">IndiGo</option>
+              <option value="airlines/vistara.svg">Vistara</option>
+              <option value="airlines/emirates.svg">Emirates</option>
+              <option value="airlines/qatar-airways.svg">Qatar Airways</option>
+              <option value="airlines/singapore-airlines.svg">Singapore Airlines</option>
+              <option value="airlines/thai-airways.svg">Thai Airways</option>
+              <option value="airlines/british-airways.svg">British Airways</option>
+              <option value="airlines/lufthansa.svg">Lufthansa</option>
+              <option value="airlines/air-france.svg">Air France</option>
+              <option value="airlines/etihad-airways.svg">Etihad Airways</option>
+              <option value="airlines/cathay-pacific.svg">Cathay Pacific</option>
+              <option value="airlines/japan-airlines.svg">Japan Airlines</option>
+              <option value="airlines/gulf-air.svg">Gulf Air</option>
+              <option value="airlines/kuwait-airways.svg">Kuwait Airways</option>
+              <option value="airlines/oman-air.svg">Oman Air</option>
+              <option value="airlines/air-canada.svg">Air Canada</option>
+              <option value="airlines/united-airlines.svg">United Airlines</option>
+              <option value="airlines/american-airlines.svg">American Airlines</option>
+              <option value="airlines/delta-air-lines.svg">Delta Air Lines</option>
+              <option value="airlines/virgin-atlantic.svg">Virgin Atlantic</option>
+            </select>
+          </div>
+
+          <!-- Live Preview of Selected Logo in Sidebar -->
+          <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-700/60 flex items-center justify-center min-h-[50px]">
+            <img id="sidebar-logo-preview" src="airlines/malaysia-airlines.svg" alt="Selected Airline" class="max-h-12 max-w-full object-contain">
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-slate-300">Logo Size</label>
+              <span id="logo-size-val" class="text-[11px] text-blue-400 font-mono font-bold">85px</span>
+            </div>
+            <input id="logo-size-input" type="range" min="50" max="130" value="85" oninput="updateLogoSize(this.value)"
+              class="w-full accent-blue-500 cursor-pointer">
+          </div>
+
+          <div>
+            <label class="font-bold text-slate-400 block mb-1">Or Upload Custom Logo</label>
+            <input id="airline-logo-input" type="file" accept="image/*" onchange="handleLogoUpload(this)"
+              class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
+          </div>
         </div>
 
-        <div>
-          <label class="font-bold text-slate-400 block mb-1">Or Upload Custom Logo</label>
-          <input id="airline-logo-input" type="file" accept="image/*" onchange="handleLogoUpload(this)"
-            class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
-        </div>
-      </div>
-
-      <!-- ── Tagline Block ── -->
-      <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 space-y-2">
-        <label class="font-bold text-slate-300 block">Header Tagline</label>
-        <input id="tagline-input" type="text" value="BEST RATES FOR EVERY JOURNEY" oninput="renderPoster()"
-          class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
-      </div>
-
-      <!-- ── Route 1 Block ── -->
-      <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
-        <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
-          <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Route 1</span>
-          <span class="text-[10px] text-slate-400">Primary Route</span>
-        </div>
-        <div>
-          <label class="font-bold text-slate-300 block mb-1">Route Title</label>
-          <input id="r1-name" type="text" value="DELHI – BALI – DELHI" oninput="renderPoster()"
+        <!-- ── Tagline Block ── -->
+        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 space-y-2">
+          <label class="font-bold text-slate-300 block">Header Tagline</label>
+          <input id="tagline-input" type="text" value="BEST RATES FOR EVERY JOURNEY" oninput="renderPoster()"
             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
         </div>
-        <div>
-          <label class="font-bold text-slate-300 block mb-1">Flight Segments (4 pills)</label>
-          <div id="r1-segments" class="space-y-1.5">
-            <input type="text" value="MH 191 DEL-KUL | 23:00 – 06:55" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-            <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-            <input type="text" value="MH 714 DPS-KUL | 13:05 – 16:00" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-            <input type="text" value="MH 190 KUL-DEL | 18:50 – 21:50" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-          </div>
-        </div>
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <label class="font-bold text-slate-300">Date – Price Rows</label>
-            <button onclick="addRow(1)" class="text-blue-400 hover:text-blue-300 font-bold text-[11px]">+ Add Row</button>
-          </div>
-          <div id="r1-rows" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
-        </div>
-      </div>
 
-      <!-- ── Route 2 Block ── -->
-      <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
-        <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
-          <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Route 2</span>
-          <span class="text-[10px] text-slate-400">Secondary Route</span>
-        </div>
-        <div>
-          <label class="font-bold text-slate-300 block mb-1">Route Title</label>
-          <input id="r2-name" type="text" value="AMRITSAR – BALI – AMRITSAR" oninput="renderPoster()"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
-        </div>
-        <div>
-          <label class="font-bold text-slate-300 block mb-1">Flight Segments (4 pills)</label>
-          <div id="r2-segments" class="space-y-1.5">
-            <input type="text" value="MH 119 ATQ-KUL | 23:15 – 06:10" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-            <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-            <input type="text" value="MH 714 DPS-KUL | 12:55 – 16:00" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-            <input type="text" value="MH 118 KUL-ATQ | 17:15 – 20:40" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+        <!-- ── Route 1 Block ── -->
+        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+            <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Route 1</span>
+            <span class="text-[10px] text-slate-400">Primary Route</span>
+          </div>
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Route Title</label>
+            <input id="r1-name" type="text" value="DELHI – BALI – DELHI" oninput="renderPoster()"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
+          </div>
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Flight Segments (4 pills)</label>
+            <div id="r1-segments" class="space-y-1.5">
+              <input type="text" value="MH 191 DEL-KUL | 23:00 – 06:55" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+              <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+              <input type="text" value="MH 714 DPS-KUL | 13:05 – 16:00" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+              <input type="text" value="MH 190 KUL-DEL | 18:50 – 21:50" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-slate-300">Date – Price Rows</label>
+              <button onclick="addRow(1)" class="text-blue-400 hover:text-blue-300 font-bold text-[11px]">+ Add Row</button>
+            </div>
+            <div id="r1-rows" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
           </div>
         </div>
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <label class="font-bold text-slate-300">Date – Price Rows</label>
-            <button onclick="addRow(2)" class="text-blue-400 hover:text-blue-300 font-bold text-[11px]">+ Add Row</button>
-          </div>
-          <div id="r2-rows" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
-        </div>
-      </div>
 
-      <!-- ── Baggage Block ── -->
-      <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
-        <div class="pb-1 border-b border-slate-700">
-          <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Baggage Allowance</span>
+        <!-- ── Route 2 Block ── -->
+        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
+            <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Route 2</span>
+            <span class="text-[10px] text-slate-400">Secondary Route</span>
+          </div>
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Route Title</label>
+            <input id="r2-name" type="text" value="AMRITSAR – BALI – AMRITSAR" oninput="renderPoster()"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
+          </div>
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Flight Segments (4 pills)</label>
+            <div id="r2-segments" class="space-y-1.5">
+              <input type="text" value="MH 119 ATQ-KUL | 23:15 – 06:10" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+              <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+              <input type="text" value="MH 714 DPS-KUL | 12:55 – 16:00" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+              <input type="text" value="MH 118 KUL-ATQ | 17:15 – 20:40" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-slate-300">Date – Price Rows</label>
+              <button onclick="addRow(2)" class="text-blue-400 hover:text-blue-300 font-bold text-[11px]">+ Add Row</button>
+            </div>
+            <div id="r2-rows" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
+          </div>
         </div>
-        <div>
-          <label class="font-bold text-slate-300 block mb-1">Baggage Banner Text</label>
-          <input id="baggage-text" type="text" value="BAGGAGE: 30KG + 7KG" oninput="renderPoster()"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
+
+        <!-- ── Baggage Block ── -->
+        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
+          <div class="pb-1 border-b border-slate-700">
+            <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Baggage Allowance</span>
+          </div>
+          <div>
+            <label class="font-bold text-slate-300 block mb-1">Baggage Banner Text</label>
+            <input id="baggage-text" type="text" value="BAGGAGE: 30KG + 7KG" oninput="renderPoster()"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
+          </div>
+        </div>
+
+      </div>
+      <!-- /controls-template-1 -->
+
+      <!-- ═══════════════════════════════════ -->
+      <!--  CONTROLS: TEMPLATE 2 (READY)      -->
+      <!-- ═══════════════════════════════════ -->
+      <div id="controls-template-2" class="space-y-4 hidden">
+        <div class="bg-gradient-to-br from-indigo-900/50 to-purple-900/40 p-4 rounded-xl border border-indigo-700/60 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">✨</span>
+            <span class="font-black text-indigo-300 uppercase tracking-wider text-xs">Template 2 Setup Mode</span>
+          </div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Ready to configure Template 2! Introduce the design, image file, and parameters you want to customize.
+          </p>
+        </div>
+
+        <div id="t2-dynamic-controls" class="space-y-3">
+          <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 text-center py-6">
+            <p class="text-xs text-slate-400 font-semibold">Awaiting Template 2 details from user...</p>
+          </div>
         </div>
       </div>
+      <!-- /controls-template-2 -->
 
     </div>
 
@@ -320,7 +376,7 @@
         class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black py-3 rounded-xl shadow-lg shadow-blue-500/30 transition text-sm flex items-center justify-center gap-2">
         <span>⬇</span> Download High-Res Poster
       </button>
-      <div class="text-[10px] text-slate-500 text-center">
+      <div id="download-hint" class="text-[10px] text-slate-500 text-center">
         Native 1080 × 1440 Ultra-Crisp PNG Export
       </div>
     </div>
@@ -331,10 +387,12 @@
   <!-- ═══════════════════════════════════════ -->
   <main id="preview-container" class="flex-1 bg-slate-950 overflow-auto flex items-center justify-center p-6 relative">
     <div id="poster-scale-wrapper" class="origin-center transition-transform">
-      <div id="poster">
+
+      <!-- ══ POSTER CANVAS: TEMPLATE 1 ══ -->
+      <div id="poster-t1" class="poster-canvas">
 
         <!-- ══ MIDDLE EDITABLE CONTENT ══ -->
-        <!-- Placed between header bottom and visit website pill -->
+        <!-- Placed between header bottom (~y=154) and visit website pill (~y=1215) -->
         <div style="position: absolute; top: 154px; left: 0; width: 1080px; display: flex; flex-direction: column;">
 
           <!-- 0. Tagline -->
@@ -371,10 +429,29 @@
         <!-- /middle -->
 
       </div>
+      <!-- /poster-t1 -->
+
+      <!-- ══ POSTER CANVAS: TEMPLATE 2 (READY FOR DROP-IN) ══ -->
+      <div id="poster-t2" class="poster-canvas flex flex-col items-center justify-center border-2 border-dashed border-indigo-500/40 rounded-2xl text-white p-12 text-center">
+        <div class="w-24 h-24 rounded-full bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-4xl mb-4">
+          ✨
+        </div>
+        <h2 class="text-3xl font-black tracking-wider text-indigo-300 uppercase mb-2">Template 2 Ready For Setup</h2>
+        <p class="text-sm text-slate-400 max-w-md leading-relaxed mb-6">
+          Provide the image file and configuration details for the 2nd template to activate its live canvas and controls here.
+        </p>
+        <div class="px-4 py-2 rounded-lg bg-slate-800/80 border border-slate-700 text-xs font-mono text-slate-300">
+          Canvas Size: 1080 × 1440
+        </div>
+      </div>
+      <!-- /poster-t2 -->
+
     </div>
   </main>
 
   <script>
+    let activeTemplate = 1;
+
     const defaultData = {
       tagline: "BEST RATES FOR EVERY JOURNEY",
       r1Name: "DELHI – BALI – DELHI",
@@ -408,6 +485,37 @@
       baggage: "BAGGAGE: 30KG + 7KG",
       airline: "airlines/malaysia-airlines.svg"
     };
+
+    function switchTemplate(id) {
+      activeTemplate = id;
+
+      // Update Tab UI
+      const tab1 = document.getElementById('tab-btn-1');
+      const tab2 = document.getElementById('tab-btn-2');
+      const badge = document.getElementById('active-template-badge');
+
+      if (id === 1) {
+        tab1.className = "py-2 px-2 rounded-md font-extrabold text-xs text-center transition bg-blue-600 text-white shadow-md flex items-center justify-center gap-1.5";
+        tab2.className = "py-2 px-2 rounded-md font-extrabold text-xs text-center transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center gap-1.5";
+        badge.textContent = "Template 1";
+        document.getElementById('controls-template-1').classList.remove('hidden');
+        document.getElementById('controls-template-2').classList.add('hidden');
+        document.getElementById('poster-t1').style.display = 'block';
+        document.getElementById('poster-t2').style.display = 'none';
+        document.getElementById('download-hint').textContent = "Native 1080 × 1440 Ultra-Crisp PNG Export";
+      } else {
+        tab2.className = "py-2 px-2 rounded-md font-extrabold text-xs text-center transition bg-indigo-600 text-white shadow-md flex items-center justify-center gap-1.5";
+        tab1.className = "py-2 px-2 rounded-md font-extrabold text-xs text-center transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center gap-1.5";
+        badge.textContent = "Template 2";
+        document.getElementById('controls-template-1').classList.add('hidden');
+        document.getElementById('controls-template-2').classList.remove('hidden');
+        document.getElementById('poster-t1').style.display = 'none';
+        document.getElementById('poster-t2').style.display = 'flex';
+        document.getElementById('download-hint').textContent = "Template 2 Export";
+      }
+
+      fitPosterToScreen();
+    }
 
     function addRow(route, date = "", price = "") {
       const c = document.getElementById(`r${route}-rows`);
@@ -513,28 +621,30 @@
     }
 
     function resetDefaults() {
-      document.getElementById('tagline-input').value = defaultData.tagline;
-      document.getElementById('r1-name').value = defaultData.r1Name;
-      document.getElementById('r2-name').value = defaultData.r2Name;
-      document.getElementById('baggage-text').value = defaultData.baggage;
-      document.getElementById('airline-select').value = defaultData.airline;
-      handleAirlineSelect(defaultData.airline);
-      document.getElementById('logo-size-input').value = 85;
-      updateLogoSize(85);
+      if (activeTemplate === 1) {
+        document.getElementById('tagline-input').value = defaultData.tagline;
+        document.getElementById('r1-name').value = defaultData.r1Name;
+        document.getElementById('r2-name').value = defaultData.r2Name;
+        document.getElementById('baggage-text').value = defaultData.baggage;
+        document.getElementById('airline-select').value = defaultData.airline;
+        handleAirlineSelect(defaultData.airline);
+        document.getElementById('logo-size-input').value = 85;
+        updateLogoSize(85);
 
-      const r1SegInputs = document.querySelectorAll('#r1-segments input');
-      defaultData.r1Segs.forEach((val, idx) => { if (r1SegInputs[idx]) r1SegInputs[idx].value = val; });
+        const r1SegInputs = document.querySelectorAll('#r1-segments input');
+        defaultData.r1Segs.forEach((val, idx) => { if (r1SegInputs[idx]) r1SegInputs[idx].value = val; });
 
-      const r2SegInputs = document.querySelectorAll('#r2-segments input');
-      defaultData.r2Segs.forEach((val, idx) => { if (r2SegInputs[idx]) r2SegInputs[idx].value = val; });
+        const r2SegInputs = document.querySelectorAll('#r2-segments input');
+        defaultData.r2Segs.forEach((val, idx) => { if (r2SegInputs[idx]) r2SegInputs[idx].value = val; });
 
-      document.getElementById('r1-rows').innerHTML = "";
-      defaultData.r1Rows.forEach(([d, p]) => addRow(1, d, p));
+        document.getElementById('r1-rows').innerHTML = "";
+        defaultData.r1Rows.forEach(([d, p]) => addRow(1, d, p));
 
-      document.getElementById('r2-rows').innerHTML = "";
-      defaultData.r2Rows.forEach(([d, p]) => addRow(2, d, p));
+        document.getElementById('r2-rows').innerHTML = "";
+        defaultData.r2Rows.forEach(([d, p]) => addRow(2, d, p));
 
-      renderPoster();
+        renderPoster();
+      }
     }
 
     function fitPosterToScreen() {
@@ -553,7 +663,7 @@
       btn.disabled = true;
 
       try {
-        const poster = document.getElementById('poster');
+        const targetPoster = activeTemplate === 1 ? document.getElementById('poster-t1') : document.getElementById('poster-t2');
         const wrapper = document.getElementById('poster-scale-wrapper');
 
         // Temporarily reset transform for 1:1 pixel-perfect capture
@@ -563,7 +673,7 @@
         // Wait for fonts & images to settle
         await document.fonts.ready;
 
-        const canvas = await html2canvas(poster, {
+        const canvas = await html2canvas(targetPoster, {
           width: 1080,
           height: 1440,
           scale: 1, // exact 1080x1440 native master resolution
@@ -577,8 +687,12 @@
 
         // Trigger download
         const a = document.createElement('a');
-        const r1 = document.getElementById('r1-name').value.replace(/[^a-zA-Z0-9]/g, '_');
-        a.download = `filter-flights-${r1}.png`;
+        if (activeTemplate === 1) {
+          const r1 = document.getElementById('r1-name').value.replace(/[^a-zA-Z0-9]/g, '_');
+          a.download = `filter-flights-t1-${r1}.png`;
+        } else {
+          a.download = `filter-flights-template-2.png`;
+        }
         a.href = canvas.toDataURL('image/png');
         a.click();
       } catch (err) {
