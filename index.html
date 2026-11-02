@@ -13,6 +13,11 @@
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 4px; }
 
+    /* ── Poster scale-to-fit ── */
+    #poster-wrapper {
+      transform-origin: top center;
+    }
+
     /* ── Poster base ── */
     #poster {
       width: 680px;
@@ -449,9 +454,23 @@
     }
   }
 
+  // ── Step 6: Auto-scale poster to fit the preview panel ──
+  function scalePoster() {
+    const wrapper = document.getElementById('poster-wrapper');
+    const main = wrapper.parentElement;
+    const available = main.clientWidth - 48; // 48px padding
+    const posterW = 680;
+    const scale = Math.min(1, available / posterW);
+    wrapper.style.transform = `scale(${scale})`;
+    wrapper.style.marginBottom = `-${posterW * (1 - scale) * 0.5}px`;
+  }
+
+  window.addEventListener('resize', scalePoster);
+
   // Initialise default rows
   [1, 2].forEach(r => defaultRows[r].forEach(([d, p]) => addRow(r, d, p)));
   renderPoster();
+  scalePoster();
 
   function renderPoster() {
     // Route names
