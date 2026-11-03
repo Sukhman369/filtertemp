@@ -119,3 +119,4 @@ function updateCardStyle(prop, val) {
   AppState.cardStyle[prop] = val;
   applyCardStyles();
 }
+

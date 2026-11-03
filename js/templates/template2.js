@@ -161,3 +161,4 @@ function deleteT2Date(col, idx) {
   buildControls2();
   renderTemplate2();
 }
+

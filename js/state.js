@@ -226,3 +226,4 @@ function applyCardStyles() {
   };
   root.style.setProperty('--card-shadow', shadows[c.shadow] || shadows.medium);
 }
+

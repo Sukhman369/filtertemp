@@ -89,3 +89,4 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', fitPosterToScreen);
   setTimeout(fitPosterToScreen, 100);
 });
+

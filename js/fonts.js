@@ -62,3 +62,4 @@ function applyTypography() {
   document.documentElement.style.setProperty('--poster-weight', weight);
   document.documentElement.style.setProperty('--font-scale', scale);
 }
+
