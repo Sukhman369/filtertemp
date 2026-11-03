@@ -2,586 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Filter Flights — Fare Poster Generator</title>
+
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- HTML2Canvas Export Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Google Fonts Preconnect & 12 Readable Font Families -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Barlow:wght@600;700;800;900&family=Caveat:wght@700&family=Pacifico&family=Yellowtail&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Barlow', sans-serif; background: #0b1329; height: 100vh; overflow: hidden; color: #1e293b; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0b1329; }
-    ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700;800&family=Caveat:wght@700&family=DM+Sans:ital,opsz,wght@0,9..40,500..800;1,9..40,500..800&family=Figtree:wght@500;600;700;800&family=Inter:wght@500;600;700;800&family=Lexend:wght@500;600;700;800&family=Montserrat:ital,wght@0,500..800;1,500..800&family=Open+Sans:ital,wght@0,500..800;1,500..800&family=Outfit:wght@500;600;700;800&family=Pacifico&family=Plus+Jakarta+Sans:ital,wght@0,500..800;1,500..800&family=Poppins:ital,wght@0,500..800;1,500..800&family=Roboto:ital,wght@0,500;0,700;0,900;1,500;1,700&family=Work+Sans:ital,wght@0,500..800;1,500..800&family=Yellowtail&display=swap" rel="stylesheet">
 
-    /* ══ NATIVE 1080x1440 CANVAS BASE ══ */
-    .poster-canvas {
-      width: 1080px;
-      height: 1440px;
-      position: relative;
-      overflow: hidden;
-      font-family: 'Barlow Condensed', sans-serif;
-      background: url('filterflights.png') no-repeat top left;
-      background-size: 1080px 1440px;
-      user-select: none;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
-    }
-
-    #poster-t2 {
-      display: none;
-    }
-
-    /* ── TEMPLATE 1 SPECIFIC STYLES ── */
-    .tagline-text {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 27px;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      text-shadow: 0 2px 8px rgba(0, 30, 80, 0.35);
-      margin-left: 80px;
-      margin-bottom: 6px;
-    }
-
-    .route-capsule {
-      background: linear-gradient(180deg, #00367d 0%, #001e52 100%);
-      border: 3px solid #ffffff;
-      border-radius: 33px;
-      color: #ffffff;
-      font-size: 36px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      text-align: center;
-      padding: 3px 33px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 24px rgba(0, 20, 60, 0.35);
-      margin: auto auto;
-    }
-
-    .segments-bar {
-      width: 950px;
-      background: rgba(222, 243, 253, 0.88);
-      border: 2px solid rgba(160, 215, 245, 0.85);
-      border-radius: 9999px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 4px 16px;
-      box-shadow: 0 4px 14px rgba(0, 30, 80, 0.08);
-      margin: 0 auto;
-    }
-    .segment-cell {
-      flex: 1;
-      text-align: center;
-      color: #002266;
-      line-height: 1.2;
-      padding: 0 4px;
-    }
-    .segment-code {
-      font-size: 16px;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-    }
-    .segment-time {
-      font-size: 15px;
-      font-weight: 700;
-      color: #002266;
-    }
-    .segment-vdiv {
-      width: 1.5px;
-      height: 30px;
-      background: rgba(0, 34, 102, 0.3);
-      flex-shrink: 0;
-    }
-
-    .dp-card {
-      width: 790px;
-      background: #ffffff;
-      border-radius: 22px;
-      box-shadow: 0 8px 26px rgba(0, 25, 75, 0.12);
-      padding: 8px 26px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .dp-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1px 0;
-    }
-    .dp-date {
-      font-size: 27px;
-      font-weight: 900;
-      color: #002266;
-      letter-spacing: 0.5px;
-      line-height: 1.15;
-    }
-    .dp-price-badge {
-      background: #0082db;
-      color: #ffffff;
-      font-size: 27px;
-      font-weight: 900;
-      border-radius: 10px;
-      padding: 2px 28px;
-      min-width: 170px;
-      text-align: center;
-      letter-spacing: 0.5px;
-      line-height: 1.15;
-      box-shadow: 0 3px 8px rgba(0, 110, 220, 0.28);
-    }
-
-    .baggage-capsule {
-      background: linear-gradient(180deg, #00367d 0%, #001e52 100%);
-      border: 3px solid #ffffff;
-      border-radius: 9999px;
-      color: #ffffff;
-      font-size: 36px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-align: center;
-      padding: 4px 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 24px rgba(0, 20, 60, 0.35);
-      margin: 0 auto;
-    }
-
-    /* ── TEMPLATE 2 SPECIFIC STYLES ── */
-    .t2-script {
-      font-family: 'Yellowtail', 'Pacifico', 'Caveat', cursive;
-      font-size: 104px;
-      font-weight: 700;
-      color: #fc8b15;
-      line-height: 0.9;
-      text-align: center;
-      letter-spacing: 1px;
-      text-shadow: 0 0 16px rgba(255, 255, 255, 0.9), 0 2px 8px rgba(252, 139, 21, 0.35);
-    }
-
-    .t2-route-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 68px;
-      font-weight: 900;
-      color: #082f74;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      text-align: center;
-      line-height: 1;
-      text-shadow: 0 2px 8px rgba(8, 47, 116, 0.15);
-    }
-
-    .t2-timings-box {
-      width: 790px;
-      background: #fc8b15;
-      border-radius: 12px 12px 0 0;
-      padding: 8px 18px;
-      color: #ffffff;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 17.5px;
-      font-weight: 800;
-      line-height: 1.35;
-      letter-spacing: 0.4px;
-      text-align: center;
-      box-shadow: 0 4px 14px rgba(252, 139, 21, 0.25);
-      margin: 0 auto;
-    }
-
-    .t2-dates-card {
-      width: 790px;
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-top: none;
-      border-bottom: none;
-      padding: 12px 32px 10px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0 32px;
-      box-shadow: 0 8px 24px rgba(0, 20, 60, 0.08);
-    }
-
-    .t2-date-item {
-      font-size: 26px;
-      font-weight: 900;
-      color: #0a0a0a;
-      letter-spacing: 0.5px;
-      line-height: 1.25;
-      padding: 1.5px 0;
-      font-family: 'Barlow Condensed', sans-serif;
-    }
-
-    .t2-price-banner {
-      width: 790px;
-      background: #fc8b15;
-      border-radius: 0 0 14px 14px;
-      padding: 6px 24px;
-      text-align: center;
-      color: #ffffff;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 74px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: 1px;
-      box-shadow: 0 6px 20px rgba(252, 139, 21, 0.35);
-      margin: 0 auto;
-    }
-
-    .t2-baggage-capsule {
-      background: #082f74;
-      border: 3px solid #ffffff;
-      border-radius: 9999px;
-      color: #ffffff;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 36px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-align: center;
-      padding: 4px 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 24px rgba(8, 47, 116, 0.35);
-      margin: 0 auto;
-    }
-  </style>
+  <!-- Modular Stylesheets -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/templates.css">
+  <link rel="stylesheet" href="css/controls.css">
 </head>
 <body class="flex">
 
   <!-- ═══════════════════════════════════════ -->
   <!--  LEFT SIDEBAR: Form Controls           -->
   <!-- ═══════════════════════════════════════ -->
-  <aside class="w-96 bg-slate-900 border-r border-slate-800 h-screen flex flex-col flex-shrink-0 z-20">
+  <aside class="sidebar">
     <!-- Header -->
-    <div class="px-5 py-3.5 bg-gradient-to-r from-blue-700 to-indigo-800 text-white flex items-center justify-between border-b border-blue-600/40">
+    <div class="sidebar-header">
       <div>
-        <h1 class="text-base font-extrabold tracking-wide flex items-center gap-2">
+        <h1 class="text-sm font-extrabold tracking-wide flex items-center gap-2 text-white">
           <span>✈️</span> Filter Flights Editor
         </h1>
-        <p class="text-[11px] text-blue-200">Multi-Template Generator</p>
+        <p class="text-[11px] text-blue-300">Multi-Template Studio</p>
       </div>
-      <button onclick="resetDefaults()" title="Reset to Original Values" class="text-xs bg-white/20 hover:bg-white/30 px-2.5 py-1 rounded font-bold transition">
+      <button onclick="resetDefaults()" title="Reset to Original Values"
+        class="text-xs bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded font-bold transition text-white">
         Reset
       </button>
     </div>
 
-    <!-- ══ TEMPLATE SELECTOR TABS ══ -->
-    <div class="p-3 bg-slate-950 border-b border-slate-800">
+    <!-- ══ TEMPLATE SELECTOR TABS (1 to 5) ══ -->
+    <div class="template-nav">
       <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-        <span>Active Template</span>
-        <span id="active-template-badge" class="text-blue-400 font-mono">Template 1</span>
+        <span>Template Archetype</span>
+        <span id="active-template-badge" class="text-blue-400 font-mono text-[11px]">T1: Dual Route Capsules</span>
       </div>
-      <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-900 rounded-lg border border-slate-800">
-        <button id="tab-btn-1" onclick="switchTemplate(1)"
-          class="py-2 px-2 rounded-md font-extrabold text-xs text-center transition bg-blue-600 text-white shadow-md flex items-center justify-center gap-1.5">
-          <span>🎨</span> Template 1
+      <div class="template-pill-grid">
+        <button id="pill-t1" onclick="switchTemplate(1)" class="template-pill-btn active" title="Dual Route Capsules & Date Pills">
+          <span>🎨</span><br>T1
         </button>
-        <button id="tab-btn-2" onclick="switchTemplate(2)"
-          class="py-2 px-2 rounded-md font-extrabold text-xs text-center transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center gap-1.5">
-          <span>✨</span> Template 2
+        <button id="pill-t2" onclick="switchTemplate(2)" class="template-pill-btn" title="Script Destination & Hero Price Banner">
+          <span>✨</span><br>T2
+        </button>
+        <button id="pill-t3" onclick="switchTemplate(3)" class="template-pill-btn" title="4-Quadrant Fixed Departures Grid">
+          <span>⏹️</span><br>T3
+        </button>
+        <button id="pill-t4" onclick="switchTemplate(4)" class="template-pill-btn" title="Dual-Sector Split (Onward/Return)">
+          <span>↔️</span><br>T4
+        </button>
+        <button id="pill-t5" onclick="switchTemplate(5)" class="template-pill-btn" title="Multi-City Inventory Matrix">
+          <span>📋</span><br>T5
         </button>
       </div>
     </div>
 
     <!-- Scrollable Controls Container -->
-    <div class="flex-1 overflow-y-auto px-5 py-4 space-y-4 text-slate-200 text-xs">
+    <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3">
 
-      <!-- ═══════════════════════════════════ -->
-      <!--  CONTROLS: TEMPLATE 1              -->
-      <!-- ═══════════════════════════════════ -->
-      <div id="controls-template-1" class="space-y-4">
-
-        <!-- Airline Selection Block -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
-          <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
-            <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Airline Selection</span>
-            <span class="text-[10px] text-slate-400">From /airlines/</span>
-          </div>
+      <!-- ══ SECTION 1: TYPOGRAPHY & READABILITY ══ -->
+      <div class="control-section">
+        <div class="section-header">
+          <h3><span>🔤</span> Standard Font & Readability</h3>
+        </div>
+        <div class="section-body">
           <div>
-            <label class="font-bold text-slate-300 block mb-1">Choose Airline Logo</label>
-            <select id="airline-select" onchange="handleAirlineSelect(this.value)"
-              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold cursor-pointer">
-              <option value="airlines/malaysia-airlines.svg" selected>Malaysia Airlines</option>
-              <option value="airlines/singapore-airlines-exact.png">Singapore Airlines</option>
-              <option value="airlines/air-india.svg">Air India</option>
-              <option value="airlines/indigo.svg">IndiGo</option>
-              <option value="airlines/vistara.svg">Vistara</option>
-              <option value="airlines/emirates.svg">Emirates</option>
-              <option value="airlines/qatar-airways.svg">Qatar Airways</option>
-              <option value="airlines/thai-airways.svg">Thai Airways</option>
-              <option value="airlines/british-airways.svg">British Airways</option>
-              <option value="airlines/lufthansa.svg">Lufthansa</option>
-              <option value="airlines/air-france.svg">Air France</option>
-              <option value="airlines/etihad-airways.svg">Etihad Airways</option>
-              <option value="airlines/cathay-pacific.svg">Cathay Pacific</option>
-              <option value="airlines/japan-airlines.svg">Japan Airlines</option>
-              <option value="airlines/gulf-air.svg">Gulf Air</option>
-              <option value="airlines/kuwait-airways.svg">Kuwait Airways</option>
-              <option value="airlines/oman-air.svg">Oman Air</option>
-              <option value="airlines/air-canada.svg">Air Canada</option>
-              <option value="airlines/united-airlines.svg">United Airlines</option>
-              <option value="airlines/american-airlines.svg">American Airlines</option>
-              <option value="airlines/delta-air-lines.svg">Delta Air Lines</option>
-              <option value="airlines/virgin-atlantic.svg">Virgin Atlantic</option>
-            </select>
+            <label class="control-label">Standard Font Family (10+ Curated)</label>
+            <select id="font-family-select" class="select-input"></select>
           </div>
-
-          <!-- Live Preview of Selected Logo in Sidebar -->
-          <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-700/60 flex items-center justify-center min-h-[50px]">
-            <img id="sidebar-logo-preview" src="airlines/malaysia-airlines.svg" alt="Selected Airline" class="max-h-12 max-w-full object-contain">
-          </div>
-
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="font-bold text-slate-300">Logo Size</label>
-              <span id="logo-size-val" class="text-[11px] text-blue-400 font-mono font-bold">85px</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="control-label">Font Weight</label>
+              <select id="font-weight-select" class="select-input"></select>
             </div>
-            <input id="logo-size-input" type="range" min="50" max="130" value="85" oninput="updateLogoSize(this.value)"
-              class="w-full accent-blue-500 cursor-pointer">
-          </div>
-
-          <div>
-            <label class="font-bold text-slate-400 block mb-1">Or Upload Custom Logo</label>
-            <input id="airline-logo-input" type="file" accept="image/*" onchange="handleLogoUpload(this)"
-              class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
-          </div>
-        </div>
-
-        <!-- Tagline Block -->
-        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700 space-y-2">
-          <label class="font-bold text-slate-300 block">Header Tagline</label>
-          <input id="tagline-input" type="text" value="BEST RATES FOR EVERY JOURNEY" oninput="renderPoster()"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
-        </div>
-
-        <!-- Route 1 Block -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
-          <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
-            <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Route 1</span>
-            <span class="text-[10px] text-slate-400">Primary Route</span>
-          </div>
-          <div>
-            <label class="font-bold text-slate-300 block mb-1">Route Title</label>
-            <input id="r1-name" type="text" value="DELHI – BALI – DELHI" oninput="renderPoster()"
-              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
-          </div>
-          <div>
-            <label class="font-bold text-slate-300 block mb-1">Flight Segments (4 pills)</label>
-            <div id="r1-segments" class="space-y-1.5">
-              <input type="text" value="MH 191 DEL-KUL | 23:00 – 06:55" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-              <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-              <input type="text" value="MH 714 DPS-KUL | 13:05 – 16:00" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-              <input type="text" value="MH 190 KUL-DEL | 18:50 – 21:50" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
+            <div>
+              <div class="control-label">
+                <span>Font Scale</span>
+                <span class="value-badge" id="val-font-scale">100%</span>
+              </div>
+              <input type="range" class="slider-input mt-2" min="0.8" max="1.25" step="0.05" value="1"
+                oninput="AppState.typography.fontSizeScale = parseFloat(this.value); applyTypography(); document.getElementById('val-font-scale').textContent = Math.round(this.value * 100) + '%';">
             </div>
           </div>
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="font-bold text-slate-300">Date – Price Rows</label>
-              <button onclick="addRow(1)" class="text-blue-400 hover:text-blue-300 font-bold text-[11px]">+ Add Row</button>
-            </div>
-            <div id="r1-rows" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
-          </div>
+          <p class="text-[10px] text-slate-400">Standardized balanced fonts eliminate cramped or unreadable text.</p>
         </div>
-
-        <!-- Route 2 Block -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
-          <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
-            <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Route 2</span>
-            <span class="text-[10px] text-slate-400">Secondary Route</span>
-          </div>
-          <div>
-            <label class="font-bold text-slate-300 block mb-1">Route Title</label>
-            <input id="r2-name" type="text" value="AMRITSAR – BALI – AMRITSAR" oninput="renderPoster()"
-              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
-          </div>
-          <div>
-            <label class="font-bold text-slate-300 block mb-1">Flight Segments (4 pills)</label>
-            <div id="r2-segments" class="space-y-1.5">
-              <input type="text" value="MH 119 ATQ-KUL | 23:15 – 06:10" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-              <input type="text" value="MH 715 KUL-DPS | 09:00 – 12:05" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-              <input type="text" value="MH 714 DPS-KUL | 12:55 – 16:00" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-              <input type="text" value="MH 118 KUL-ATQ | 17:15 – 20:40" oninput="renderPoster()" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white focus:border-blue-500">
-            </div>
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="font-bold text-slate-300">Date – Price Rows</label>
-              <button onclick="addRow(2)" class="text-blue-400 hover:text-blue-300 font-bold text-[11px]">+ Add Row</button>
-            </div>
-            <div id="r2-rows" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
-          </div>
-        </div>
-
-        <!-- Baggage Block -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
-          <div class="pb-1 border-b border-slate-700">
-            <span class="font-black text-blue-400 uppercase tracking-wider text-xs">Baggage Allowance</span>
-          </div>
-          <div>
-            <label class="font-bold text-slate-300 block mb-1">Baggage Banner Text</label>
-            <input id="baggage-text" type="text" value="BAGGAGE: 30KG + 7KG" oninput="renderPoster()"
-              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 font-semibold">
-          </div>
-        </div>
-
       </div>
-      <!-- /controls-template-1 -->
 
-      <!-- ═══════════════════════════════════ -->
-      <!--  CONTROLS: TEMPLATE 2              -->
-      <!-- ═══════════════════════════════════ -->
-      <div id="controls-template-2" class="space-y-4 hidden">
-
-        <!-- Destination Script Title -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
-          <div class="flex items-center justify-between pb-1 border-b border-slate-700">
-            <span class="font-black text-orange-400 uppercase tracking-wider text-xs">Destination Cursive Title</span>
-            <span class="text-[10px] text-slate-400">Top Script</span>
-          </div>
-          <label class="font-bold text-slate-300 block mb-1">Destination Name</label>
-          <input id="t2-script-input" type="text" value="Bali" oninput="renderTemplate2()"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-orange-500 font-semibold">
+      <!-- ══ SECTION 2: CARD & CONTAINER CUSTOMIZATION ══ -->
+      <div class="control-section">
+        <div class="section-header">
+          <h3><span>📐</span> White Card & Container Styling</h3>
         </div>
-
-        <!-- Airline Selection Block -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
-          <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
-            <span class="font-black text-orange-400 uppercase tracking-wider text-xs">Airline Selection</span>
-            <span class="text-[10px] text-slate-400">From /airlines/</span>
-          </div>
-          <div>
-            <label class="font-bold text-slate-300 block mb-1">Choose Airline Logo</label>
-            <select id="t2-airline-select" onchange="handleT2AirlineSelect(this.value)"
-              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500 font-semibold cursor-pointer">
-              <option value="airlines/singapore-airlines-exact.png" selected>Singapore Airlines</option>
-              <option value="airlines/malaysia-airlines.svg">Malaysia Airlines</option>
-              <option value="airlines/air-india.svg">Air India</option>
-              <option value="airlines/indigo.svg">IndiGo</option>
-              <option value="airlines/vistara.svg">Vistara</option>
-              <option value="airlines/emirates.svg">Emirates</option>
-              <option value="airlines/qatar-airways.svg">Qatar Airways</option>
-              <option value="airlines/thai-airways.svg">Thai Airways</option>
-              <option value="airlines/british-airways.svg">British Airways</option>
-              <option value="airlines/lufthansa.svg">Lufthansa</option>
-              <option value="airlines/air-france.svg">Air France</option>
-              <option value="airlines/etihad-airways.svg">Etihad Airways</option>
-              <option value="airlines/cathay-pacific.svg">Cathay Pacific</option>
-              <option value="airlines/japan-airlines.svg">Japan Airlines</option>
-              <option value="airlines/gulf-air.svg">Gulf Air</option>
-              <option value="airlines/kuwait-airways.svg">Kuwait Airways</option>
-              <option value="airlines/oman-air.svg">Oman Air</option>
-              <option value="airlines/air-canada.svg">Air Canada</option>
-              <option value="airlines/united-airlines.svg">United Airlines</option>
-              <option value="airlines/american-airlines.svg">American Airlines</option>
-              <option value="airlines/delta-air-lines.svg">Delta Air Lines</option>
-              <option value="airlines/virgin-atlantic.svg">Virgin Atlantic</option>
-            </select>
-          </div>
-
-          <!-- Live Preview of Selected Logo in Sidebar -->
-          <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-700/60 flex items-center justify-center min-h-[50px]">
-            <img id="t2-sidebar-logo-preview" src="airlines/singapore-airlines-exact.png" alt="Selected Airline" class="max-h-12 max-w-full object-contain">
-          </div>
-
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="font-bold text-slate-300">Logo Size</label>
-              <span id="t2-logo-size-val" class="text-[11px] text-orange-400 font-mono font-bold">85px</span>
-            </div>
-            <input id="t2-logo-size-input" type="range" min="50" max="130" value="85" oninput="updateT2LogoSize(this.value)"
-              class="w-full accent-orange-500 cursor-pointer">
-          </div>
-
-          <div>
-            <label class="font-bold text-slate-400 block mb-1">Or Upload Custom Logo</label>
-            <input id="t2-airline-logo-input" type="file" accept="image/*" onchange="handleT2LogoUpload(this)"
-              class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-orange-600 file:text-white hover:file:bg-orange-500 cursor-pointer">
-          </div>
+        <div class="section-body" id="card-appearance-controls">
+          <!-- Injected via initCardControls() -->
         </div>
-
-        <!-- Route Title -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
-          <label class="font-bold text-slate-300 block mb-1">Route Title</label>
-          <input id="t2-route-input" type="text" value="DELHI-BALI-DELHI" oninput="renderTemplate2()"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-orange-500 font-semibold">
-        </div>
-
-        <!-- Flight Timings Block -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
-          <div class="pb-1 border-b border-slate-700">
-            <span class="font-black text-orange-400 uppercase tracking-wider text-xs">Flight Timings (Orange Bar)</span>
-          </div>
-          <label class="font-bold text-slate-300 block">Flight Timing Line 1</label>
-          <input id="t2-timing-1" type="text" value="SQ403 DEL 21:45 → SIN 05:55 &nbsp;&nbsp;&nbsp;&nbsp; SQ934 SIN 06:45 → DPS 09:30" oninput="renderTemplate2()"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:border-orange-500">
-          <label class="font-bold text-slate-300 block mt-1">Flight Timing Line 2</label>
-          <input id="t2-timing-2" type="text" value="SQ947 DPS 21:30 → SIN 00:20 &nbsp;&nbsp;&nbsp;&nbsp; SQ402 SIN 02:25 → DEL 05:40" oninput="renderTemplate2()"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:border-orange-500">
-        </div>
-
-        <!-- Travel Dates (2 Columns) -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
-          <div class="flex items-center justify-between pb-1.5 border-b border-slate-700">
-            <span class="font-black text-orange-400 uppercase tracking-wider text-xs">Travel Dates (2 Columns)</span>
-            <span class="text-[10px] text-slate-400">Editable List</span>
-          </div>
-
-          <!-- Column 1 -->
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="font-bold text-slate-300">Left Column Dates</span>
-              <button onclick="addT2Date(1)" class="text-orange-400 hover:text-orange-300 font-bold text-[11px]">+ Add</button>
-            </div>
-            <div id="t2-col1-rows" class="space-y-1.5 max-h-36 overflow-y-auto pr-1"></div>
-          </div>
-
-          <!-- Column 2 -->
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="font-bold text-slate-300">Right Column Dates</span>
-              <button onclick="addT2Date(2)" class="text-orange-400 hover:text-orange-300 font-bold text-[11px]">+ Add</button>
-            </div>
-            <div id="t2-col2-rows" class="space-y-1.5 max-h-36 overflow-y-auto pr-1"></div>
-          </div>
-        </div>
-
-        <!-- Unified Price Banner -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
-          <label class="font-bold text-slate-300 block mb-1">Price Banner Text</label>
-          <input id="t2-price-input" type="text" value="₹52,999/-" oninput="renderTemplate2()"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-orange-500 font-semibold">
-        </div>
-
-        <!-- Baggage -->
-        <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
-          <label class="font-bold text-slate-300 block mb-1">Baggage Text</label>
-          <input id="t2-baggage-input" type="text" value="BAGGAGE: 25KG + 7KG" oninput="renderTemplate2()"
-            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-orange-500 font-semibold">
-        </div>
-
       </div>
-      <!-- /controls-template-2 -->
+
+      <!-- ══ SECTION 3: TEMPLATE SPECIFIC CONTENT ══ -->
+      <div id="template-specific-controls">
+        <!-- Injected dynamically based on active template -->
+      </div>
 
     </div>
 
     <!-- Download Section -->
-    <div class="p-4 bg-slate-950 border-t border-slate-800 space-y-2">
+    <div class="p-3.5 bg-slate-950 border-t border-slate-800 space-y-1.5">
       <button id="download-btn" onclick="downloadPoster()"
-        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black py-3 rounded-xl shadow-lg shadow-blue-500/30 transition text-sm flex items-center justify-center gap-2">
+        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold py-2.5 rounded-xl shadow-lg shadow-blue-500/25 transition text-xs flex items-center justify-center gap-2">
         <span>⬇</span> Download High-Res Poster
       </button>
-      <div id="download-hint" class="text-[10px] text-slate-500 text-center">
-        Native 1080 × 1440 Ultra-Crisp PNG Export
+      <div class="text-[10px] text-slate-400 text-center">
+        Native 1080 × 1440 Ultra-Crisp PNG Export (Updated Master Background)
       </div>
     </div>
   </aside>
@@ -589,507 +129,28 @@
   <!-- ═══════════════════════════════════════ -->
   <!--  RIGHT CANVAS PREVIEW AREA             -->
   <!-- ═══════════════════════════════════════ -->
-  <main id="preview-container" class="flex-1 bg-slate-950 overflow-auto flex items-center justify-center p-6 relative">
-    <div id="poster-scale-wrapper" class="origin-center transition-transform">
-
-      <!-- ══ POSTER CANVAS: TEMPLATE 1 ══ -->
-      <div id="poster-t1" class="poster-canvas">
-
-        <!-- ══ MIDDLE EDITABLE CONTENT ══ -->
-        <div style="position: absolute; top: 154px; left: 0; width: 1080px; display: flex; flex-direction: column;">
-
-          <!-- 0. Tagline -->
-          <div class="tagline-text" id="p-tagline">BEST RATES FOR EVERY JOURNEY</div>
-
-          <!-- 1. Route 1 Capsule -->
-          <div class="route-capsule" id="p-r1-name">DELHI – BALI – DELHI</div>
-
-          <!-- 2. Airline Logo -->
-          <div id="p-airline-logo-box" style="margin: 4px 0 3px; height: 85px; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
-            <img id="p-airline-logo" src="airlines/malaysia-airlines.svg" alt="Airline Logo"
-              style="height: 85px; max-height: 85px; max-width: 460px; object-fit: contain; margin: 0 auto; display: block;">
-          </div>
-
-          <!-- 3. Segments Bar 1 -->
-          <div class="segments-bar" id="p-r1-segments"></div>
-
-          <!-- 4. Date-Price Card 1 -->
-          <div class="dp-card" id="p-r1-dp" style="margin-top: 5px;"></div>
-
-          <!-- 5. Route 2 Capsule -->
-          <div class="route-capsule" id="p-r2-name" style="margin-top: 7px;">AMRITSAR – BALI – AMRITSAR</div>
-
-          <!-- 6. Segments Bar 2 -->
-          <div class="segments-bar" id="p-r2-segments" style="margin-top: 5px;"></div>
-
-          <!-- 7. Date-Price Card 2 -->
-          <div class="dp-card" id="p-r2-dp" style="margin-top: 5px;"></div>
-
-          <!-- 8. Baggage Capsule -->
-          <div class="baggage-capsule" id="p-baggage" style="margin-top: 7px;">BAGGAGE: 30KG + 7KG</div>
-
-        </div>
+  <main id="preview-container" class="flex-1 bg-slate-950 overflow-hidden flex items-center justify-center p-4 relative">
+    <div id="poster-scale-wrapper" class="origin-center transition-transform duration-200">
+      <div id="poster-canvas" class="poster-canvas">
+        <!-- Content Zone: 165px top offset below header banner -->
+        <div id="poster-content-area" class="content-zone"></div>
       </div>
-      <!-- /poster-t1 -->
-
-      <!-- ══ POSTER CANVAS: TEMPLATE 2 ══ -->
-      <div id="poster-t2" class="poster-canvas">
-
-        <!-- ══ TEMPLATE 2 EDITABLE CONTENT ══ -->
-        <!-- Placed between header bottom (~y=175) and visit website pill (~y=1215) -->
-        <div style="position: absolute; top: 168px; left: 0; width: 1080px; display: flex; flex-direction: column; align-items: center;">
-
-          <!-- 1. Destination Cursive Script -->
-          <div class="t2-script" id="t2-p-script">Bali</div>
-
-          <!-- 2. Airline Logo -->
-          <div id="t2-p-logo-box" style="margin: 2px 0 4px; height: 85px; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
-            <img id="t2-p-logo" src="airlines/singapore-airlines-exact.png" alt="Airline Logo"
-              style="height: 85px; max-height: 85px; max-width: 460px; object-fit: contain; margin: 0 auto; display: block;">
-          </div>
-
-          <!-- 3. Route Title -->
-          <div class="t2-route-title" id="t2-p-route">DELHI-BALI-DELHI</div>
-
-          <!-- 4. Flight Timings Orange Box -->
-          <div class="t2-timings-box" id="t2-p-timings" style="margin-top: 10px;">
-            <div id="t2-p-timing-1">SQ403 DEL 21:45 → SIN 05:55 &nbsp;&nbsp;&nbsp;&nbsp; SQ934 SIN 06:45 → DPS 09:30</div>
-            <div id="t2-p-timing-2">SQ947 DPS 21:30 → SIN 00:20 &nbsp;&nbsp;&nbsp;&nbsp; SQ402 SIN 02:25 → DEL 05:40</div>
-          </div>
-
-          <!-- 5. White Date Card (2 Columns) -->
-          <div class="t2-dates-card" id="t2-p-dates-card">
-            <div id="t2-p-col1" class="flex flex-col"></div>
-            <div id="t2-p-col2" class="flex flex-col"></div>
-          </div>
-
-          <!-- 6. Unified Price Banner -->
-          <div class="t2-price-banner" id="t2-p-price">₹52,999/-</div>
-
-          <!-- 7. Baggage Pill -->
-          <div class="t2-baggage-capsule" id="t2-p-baggage" style="margin-top: 12px;">BAGGAGE: 25KG + 7KG</div>
-
-        </div>
-      </div>
-      <!-- /poster-t2 -->
-
     </div>
   </main>
 
-  <script>
-    let activeTemplate = 1;
+  <!-- Toast Notification -->
+  <div id="toast"></div>
 
-    // ── TEMPLATE 1 DATA ──
-    const defaultData = {
-      tagline: "BEST RATES FOR EVERY JOURNEY",
-      r1Name: "DELHI – BALI – DELHI",
-      r2Name: "AMRITSAR – BALI – AMRITSAR",
-      r1Segs: [
-        "MH 191 DEL-KUL | 23:00 – 06:55",
-        "MH 715 KUL-DPS | 09:00 – 12:05",
-        "MH 714 DPS-KUL | 13:05 – 16:00",
-        "MH 190 KUL-DEL | 18:50 – 21:50"
-      ],
-      r2Segs: [
-        "MH 119 ATQ-KUL | 23:15 – 06:10",
-        "MH 715 KUL-DPS | 09:00 – 12:05",
-        "MH 714 DPS-KUL | 12:55 – 16:00",
-        "MH 118 KUL-ATQ | 17:15 – 20:40"
-      ],
-      r1Rows: [
-        ["16 JAN – 23 JAN", "₹49,999"],
-        ["20 JAN – 27 JAN", "₹52,999"],
-        ["23 JAN – 30 JAN", "₹52,999"],
-        ["30 JAN – 06 FEB", "₹51,999"],
-        ["10 FEB – 17 FEB", "₹49,999"],
-        ["17 FEB – 24 FEB", "₹48,999"],
-        ["20 FEB – 27 FEB", "₹48,999"],
-        ["27 FEB – 06 MAR", "₹48,999"]
-      ],
-      r2Rows: [
-        ["03 DEC – 10 DEC", "₹49,999"],
-        ["10 DEC – 17 DEC", "₹52,999"]
-      ],
-      baggage: "BAGGAGE: 30KG + 7KG",
-      airline: "airlines/malaysia-airlines.svg"
-    };
-
-    // ── TEMPLATE 2 DATA ──
-    const defaultDataT2 = {
-      script: "Bali",
-      route: "DELHI-BALI-DELHI",
-      airline: "airlines/singapore-airlines-exact.png",
-      timing1: "SQ403 DEL 21:45 → SIN 05:55 &nbsp;&nbsp;&nbsp;&nbsp; SQ934 SIN 06:45 → DPS 09:30",
-      timing2: "SQ947 DPS 21:30 → SIN 00:20 &nbsp;&nbsp;&nbsp;&nbsp; SQ402 SIN 02:25 → DEL 05:40",
-      col1: [
-        "19 JAN 27 - 26 JAN 27",
-        "22 JAN 27 - 29 JAN 27",
-        "30 JAN 27 - 06 FEB 27",
-        "04 FEB 27 - 11 FEB 27",
-        "05 FEB 27 - 12 FEB 27",
-        "09 FEB 27 - 16 FEB 27",
-        "12 FEB 27 - 19 FEB 27",
-        "13 FEB 27 - 20 FEB 27",
-        "19 FEB 27 - 26 FEB 27"
-      ],
-      col2: [
-        "25 FEB 27 - 04 MAR 27",
-        "26 FEB 27 - 05 MAR 27",
-        "04 MAR 27 - 11 MAR 27",
-        "05 MAR 27 - 12 MAR 27",
-        "09 MAR 27 - 16 MAR 27",
-        "12 MAR 27 - 19 MAR 27",
-        "25 MAR 27 - 01 APR 27",
-        "26 MAR 27 - 02 APR 27"
-      ],
-      price: "₹52,999/-",
-      baggage: "BAGGAGE: 25KG + 7KG"
-    };
-
-    function switchTemplate(id) {
-      activeTemplate = id;
-
-      const tab1 = document.getElementById('tab-btn-1');
-      const tab2 = document.getElementById('tab-btn-2');
-      const badge = document.getElementById('active-template-badge');
-
-      if (id === 1) {
-        tab1.className = "py-2 px-2 rounded-md font-extrabold text-xs text-center transition bg-blue-600 text-white shadow-md flex items-center justify-center gap-1.5";
-        tab2.className = "py-2 px-2 rounded-md font-extrabold text-xs text-center transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center gap-1.5";
-        badge.textContent = "Template 1";
-        document.getElementById('controls-template-1').classList.remove('hidden');
-        document.getElementById('controls-template-2').classList.add('hidden');
-        document.getElementById('poster-t1').style.display = 'block';
-        document.getElementById('poster-t2').style.display = 'none';
-        document.getElementById('download-hint').textContent = "Native 1080 × 1440 Ultra-Crisp PNG Export";
-      } else {
-        tab2.className = "py-2 px-2 rounded-md font-extrabold text-xs text-center transition bg-orange-600 text-white shadow-md flex items-center justify-center gap-1.5";
-        tab1.className = "py-2 px-2 rounded-md font-extrabold text-xs text-center transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center gap-1.5";
-        badge.textContent = "Template 2";
-        document.getElementById('controls-template-1').classList.add('hidden');
-        document.getElementById('controls-template-2').classList.remove('hidden');
-        document.getElementById('poster-t1').style.display = 'none';
-        document.getElementById('poster-t2').style.display = 'block';
-        document.getElementById('download-hint').textContent = "Template 2 Single-Price 1080 × 1440 PNG Export";
-      }
-
-      fitPosterToScreen();
-    }
-
-    // ── TEMPLATE 1 FUNCTIONS ──
-    function addRow(route, date = "", price = "") {
-      const c = document.getElementById(`r${route}-rows`);
-      const row = document.createElement('div');
-      row.className = "flex gap-1.5 items-center";
-      row.innerHTML = `
-        <input type="text" placeholder="e.g. 16 JAN – 23 JAN" value="${date}" oninput="renderPoster()"
-          class="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:border-blue-500 font-medium">
-        <input type="text" placeholder="₹49,999" value="${price}" oninput="renderPoster()"
-          class="w-20 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:border-blue-500 font-medium">
-        <button onclick="this.parentElement.remove(); renderPoster();"
-          class="text-red-400 hover:text-red-300 font-black text-sm px-1 leading-none">✕</button>
-      `;
-      c.appendChild(row);
-      renderPoster();
-    }
-
-    function getSegments(route) {
-      return Array.from(document.querySelectorAll(`#r${route}-segments input`)).map(inp => {
-        const parts = inp.value.split('|');
-        return {
-          code: (parts[0] || '').trim(),
-          time: (parts[1] || '').trim()
-        };
-      });
-    }
-
-    function buildSegmentsHTML(segs) {
-      return segs.map((s, idx) => `
-        ${idx > 0 ? '<div class="segment-vdiv"></div>' : ''}
-        <div class="segment-cell">
-          <div class="segment-code">${s.code}</div>
-          <div class="segment-time">${s.time}</div>
-        </div>
-      `).join('');
-    }
-
-    function getRows(route) {
-      return Array.from(document.querySelectorAll(`#r${route}-rows > div`)).map(r => {
-        const inputs = r.querySelectorAll('input');
-        return {
-          date: inputs[0]?.value || '',
-          price: inputs[1]?.value || ''
-        };
-      });
-    }
-
-    function buildRowsHTML(rows) {
-      return rows.map(r => `
-        <div class="dp-row">
-          <span class="dp-date">${r.date}</span>
-          <span class="dp-price-badge">${r.price}</span>
-        </div>
-      `).join('');
-    }
-
-    function renderPoster() {
-      document.getElementById('p-tagline').textContent = document.getElementById('tagline-input').value;
-      document.getElementById('p-r1-name').textContent = document.getElementById('r1-name').value;
-      document.getElementById('p-r2-name').textContent = document.getElementById('r2-name').value;
-      document.getElementById('p-r1-segments').innerHTML = buildSegmentsHTML(getSegments(1));
-      document.getElementById('p-r2-segments').innerHTML = buildSegmentsHTML(getSegments(2));
-      document.getElementById('p-r1-dp').innerHTML = buildRowsHTML(getRows(1));
-      document.getElementById('p-r2-dp').innerHTML = buildRowsHTML(getRows(2));
-      document.getElementById('p-baggage').textContent = document.getElementById('baggage-text').value;
-    }
-
-    function updateLogoSize(size) {
-      document.getElementById('logo-size-val').textContent = size + 'px';
-      const box = document.getElementById('p-airline-logo-box');
-      const img = document.getElementById('p-airline-logo');
-      if (box && img) {
-        box.style.height = size + 'px';
-        img.style.height = size + 'px';
-        img.style.maxHeight = size + 'px';
-      }
-    }
-
-    function handleAirlineSelect(src) {
-      document.getElementById('p-airline-logo').src = src;
-      document.getElementById('sidebar-logo-preview').src = src;
-      document.getElementById('airline-logo-input').value = "";
-    }
-
-    function handleLogoUpload(input) {
-      const file = input.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        document.getElementById('p-airline-logo').src = e.target.result;
-        document.getElementById('sidebar-logo-preview').src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // ── TEMPLATE 2 FUNCTIONS ──
-    function addT2Date(col, date = "") {
-      const container = document.getElementById(`t2-col${col}-rows`);
-      const row = document.createElement('div');
-      row.className = "flex gap-1.5 items-center";
-      row.innerHTML = `
-        <input type="text" placeholder="e.g. 19 JAN 27 - 26 JAN 27" value="${date}" oninput="renderTemplate2()"
-          class="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:border-orange-500 font-medium">
-        <button onclick="this.parentElement.remove(); renderTemplate2();"
-          class="text-red-400 hover:text-red-300 font-black text-sm px-1 leading-none">✕</button>
-      `;
-      container.appendChild(row);
-      renderTemplate2();
-    }
-
-    function getT2Dates(col) {
-      return Array.from(document.querySelectorAll(`#t2-col${col}-rows input`)).map(i => i.value.trim()).filter(Boolean);
-    }
-
-    function renderTemplate2() {
-      // 1. Script
-      document.getElementById('t2-p-script').textContent = document.getElementById('t2-script-input').value;
-
-      // 2. Route
-      document.getElementById('t2-p-route').textContent = document.getElementById('t2-route-input').value;
-
-      // 3. Timings
-      document.getElementById('t2-p-timing-1').innerHTML = document.getElementById('t2-timing-1').value;
-      document.getElementById('t2-p-timing-2').innerHTML = document.getElementById('t2-timing-2').value;
-
-      // 4. Dates
-      const col1 = getT2Dates(1);
-      const col2 = getT2Dates(2);
-
-      document.getElementById('t2-p-col1').innerHTML = col1.map(d => `<div class="t2-date-item">${d}</div>`).join('');
-      document.getElementById('t2-p-col2').innerHTML = col2.map(d => `<div class="t2-date-item">${d}</div>`).join('');
-
-      // 5. Price
-      document.getElementById('t2-p-price').textContent = document.getElementById('t2-price-input').value;
-
-      // 6. Baggage
-      document.getElementById('t2-p-baggage').textContent = document.getElementById('t2-baggage-input').value;
-    }
-
-    function updateT2LogoSize(size) {
-      document.getElementById('t2-logo-size-val').textContent = size + 'px';
-      const box = document.getElementById('t2-p-logo-box');
-      const img = document.getElementById('t2-p-logo');
-      if (box && img) {
-        box.style.height = size + 'px';
-        img.style.height = size + 'px';
-        img.style.maxHeight = size + 'px';
-      }
-    }
-
-    function handleT2AirlineSelect(src) {
-      document.getElementById('t2-p-logo').src = src;
-      document.getElementById('t2-sidebar-logo-preview').src = src;
-      document.getElementById('t2-airline-logo-input').value = "";
-    }
-
-    function handleT2LogoUpload(input) {
-      const file = input.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        document.getElementById('t2-p-logo').src = e.target.result;
-        document.getElementById('t2-sidebar-logo-preview').src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function resetDefaults() {
-      if (activeTemplate === 1) {
-        document.getElementById('tagline-input').value = defaultData.tagline;
-        document.getElementById('r1-name').value = defaultData.r1Name;
-        document.getElementById('r2-name').value = defaultData.r2Name;
-        document.getElementById('baggage-text').value = defaultData.baggage;
-        document.getElementById('airline-select').value = defaultData.airline;
-        handleAirlineSelect(defaultData.airline);
-        document.getElementById('logo-size-input').value = 85;
-        updateLogoSize(85);
-
-        const r1SegInputs = document.querySelectorAll('#r1-segments input');
-        defaultData.r1Segs.forEach((val, idx) => { if (r1SegInputs[idx]) r1SegInputs[idx].value = val; });
-
-        const r2SegInputs = document.querySelectorAll('#r2-segments input');
-        defaultData.r2Segs.forEach((val, idx) => { if (r2SegInputs[idx]) r2SegInputs[idx].value = val; });
-
-        document.getElementById('r1-rows').innerHTML = "";
-        defaultData.r1Rows.forEach(([d, p]) => addRow(1, d, p));
-
-        document.getElementById('r2-rows').innerHTML = "";
-        defaultData.r2Rows.forEach(([d, p]) => addRow(2, d, p));
-
-        renderPoster();
-      } else {
-        document.getElementById('t2-script-input').value = defaultDataT2.script;
-        document.getElementById('t2-route-input').value = defaultDataT2.route;
-        document.getElementById('t2-timing-1').value = defaultDataT2.timing1;
-        document.getElementById('t2-timing-2').value = defaultDataT2.timing2;
-        document.getElementById('t2-price-input').value = defaultDataT2.price;
-        document.getElementById('t2-baggage-input').value = defaultDataT2.baggage;
-        document.getElementById('t2-airline-select').value = defaultDataT2.airline;
-        handleT2AirlineSelect(defaultDataT2.airline);
-        document.getElementById('t2-logo-size-input').value = 85;
-        updateT2LogoSize(85);
-
-        document.getElementById('t2-col1-rows').innerHTML = "";
-        defaultDataT2.col1.forEach(d => addT2Date(1, d));
-
-        document.getElementById('t2-col2-rows').innerHTML = "";
-        defaultDataT2.col2.forEach(d => addT2Date(2, d));
-
-        renderTemplate2();
-      }
-    }
-
-    function fitPosterToScreen() {
-      const wrapper = document.getElementById('poster-scale-wrapper');
-      const container = document.getElementById('preview-container');
-      const padX = 60, padY = 60;
-      const availW = container.clientWidth - padX;
-      const availH = container.clientHeight - padY;
-      const scale = Math.min(availW / 1080, availH / 1440);
-      wrapper.style.transform = `scale(${scale})`;
-    }
-
-    async function downloadPoster() {
-      const btn = document.getElementById('download-btn');
-      btn.innerHTML = `<span>⏳</span> Rendering Ultra-HD PNG…`;
-      btn.disabled = true;
-
-      try {
-        const targetPoster = activeTemplate === 1 ? document.getElementById('poster-t1') : document.getElementById('poster-t2');
-        const wrapper = document.getElementById('poster-scale-wrapper');
-
-        const prevTransform = wrapper.style.transform;
-        wrapper.style.transform = 'none';
-
-        await document.fonts.ready;
-
-        const canvas = await html2canvas(targetPoster, {
-          width: 1080,
-          height: 1440,
-          scale: 1,
-          useCORS: true,
-          backgroundColor: null,
-          logging: false
-        });
-
-        wrapper.style.transform = prevTransform;
-
-        const a = document.createElement('a');
-        if (activeTemplate === 1) {
-          const r1 = document.getElementById('r1-name').value.replace(/[^a-zA-Z0-9]/g, '_');
-          a.download = `filter-flights-t1-${r1}.png`;
-        } else {
-          const dest = document.getElementById('t2-script-input').value.replace(/[^a-zA-Z0-9]/g, '_');
-          const r = document.getElementById('t2-route-input').value.replace(/[^a-zA-Z0-9]/g, '_');
-          a.download = `filter-flights-t2-${dest}-${r}.png`;
-        }
-        a.href = canvas.toDataURL('image/png');
-        a.click();
-      } catch (err) {
-        alert("Download failed. Please check browser console.");
-        console.error(err);
-      } finally {
-        btn.innerHTML = `<span>⬇</span> Download High-Res Poster`;
-        btn.disabled = false;
-      }
-    }
-
-    // ── INITIALIZE TEMPLATE 1 & 2 ──
-    defaultData.r1Rows.forEach(([d, p]) => addRow(1, d, p));
-    defaultData.r2Rows.forEach(([d, p]) => addRow(2, d, p));
-    renderPoster();
-
-    defaultDataT2.col1.forEach(d => addT2Date(1, d));
-    defaultDataT2.col2.forEach(d => addT2Date(2, d));
-    renderTemplate2();
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const exportMode = urlParams.get('export');
-    if (exportMode) {
-      const tNum = parseInt(exportMode, 10) || 1;
-      switchTemplate(tNum);
-      const aside = document.querySelector('aside');
-      if (aside) aside.style.display = 'none';
-      const main = document.querySelector('main');
-      if (main) {
-        main.style.padding = '0';
-        main.style.margin = '0';
-        main.style.alignItems = 'flex-start';
-        main.style.justifyContent = 'flex-start';
-      }
-      document.body.style.overflow = 'hidden';
-      document.body.style.background = '#ffffff';
-      document.body.style.margin = '0';
-      document.body.style.padding = '0';
-      const wrapper = document.getElementById('poster-scale-wrapper');
-      if (wrapper) {
-        wrapper.style.transform = 'none';
-        wrapper.style.position = 'fixed';
-        wrapper.style.top = '0';
-        wrapper.style.left = '0';
-        wrapper.style.width = '1080px';
-        wrapper.style.height = '1440px';
-        wrapper.style.margin = '0';
-        wrapper.style.boxShadow = 'none';
-      }
-    } else {
-      if (urlParams.get('template') === '2' || window.location.hash === '#t2') {
-        switchTemplate(2);
-      }
-      window.addEventListener('resize', fitPosterToScreen);
-      document.fonts.ready.then(fitPosterToScreen);
-      setTimeout(fitPosterToScreen, 100);
-    }
-  </script>
+  <!-- Modular Scripts -->
+  <script src="js/state.js"></script>
+  <script src="js/fonts.js"></script>
+  <script src="js/controls.js"></script>
+  <script src="js/templates/template1.js"></script>
+  <script src="js/templates/template2.js"></script>
+  <script src="js/templates/template3.js"></script>
+  <script src="js/templates/template4.js"></script>
+  <script src="js/templates/template5.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

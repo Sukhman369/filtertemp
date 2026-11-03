@@ -3,7 +3,7 @@ import os, subprocess, json
 CHROME_BIN = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 BASE_DIR = "/Users/tony/Desktop/Repos/filtertemp"
 FINALS_DIR = os.path.join(BASE_DIR, "finals")
-BG_URL = f"file://{BASE_DIR}/filterflights.png"
+BG_URL = f"file://{BASE_DIR}/filterflightsn.png"
 
 def render_poster(filename, body_content, extra_css="", top_offset=165):
     html = f"""<!DOCTYPE html>

@@ -1,0 +1,98 @@
+/* ═══════════════════════════════════════════════════════════
+   BASE & CANVAS STYLING — Filter Flights Poster Generator
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Dynamic Card Container Variables */
+  --card-width: 820px;
+  --card-min-height: auto;
+  --card-padding-y: 12px;
+  --card-padding-x: 24px;
+  --card-bg: #ffffff;
+  --card-bg-opacity: 1;
+  --card-border-width: 2px;
+  --card-border-color: #e2e8f0;
+  --card-border-radius: 16px;
+  --card-shadow: 0 8px 24px rgba(0, 20, 60, 0.12);
+
+  /* Typography Standard */
+  --poster-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --poster-weight: 600;
+  --font-scale: 1;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #090e1a;
+  height: 100vh;
+  overflow: hidden;
+  color: #e2e8f0;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090e1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #2563eb;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
+
+/* ══ NATIVE 1080x1440 CANVAS BASE ══ */
+.poster-canvas {
+  width: 1080px;
+  height: 1440px;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--poster-font);
+  font-weight: var(--poster-weight);
+  background: url('../filterflightsn.png') no-repeat top left;
+  background-size: 1080px 1440px;
+  user-select: none;
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transform-origin: center center;
+}
+
+.poster-canvas * {
+  font-family: inherit;
+}
+
+/* Middle content wrapper standard placement:
+   Header occupies top 0..165px
+   Footer occupies bottom 1280..1440px
+   Safe content zone is 165px to 1270px (1105px height) */
+.content-zone {
+  position: absolute;
+  top: 165px;
+  left: 0;
+  width: 1080px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Universal dynamic card styling class */
+.dynamic-card {
+  width: var(--card-width);
+  min-height: var(--card-min-height);
+  padding: var(--card-padding-y) var(--card-padding-x);
+  background-color: var(--card-bg);
+  border: var(--card-border-width) solid var(--card-border-color);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  transition: width 0.15s ease, border-radius 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}

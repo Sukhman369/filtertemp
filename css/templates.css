@@ -1,0 +1,468 @@
+/* ═══════════════════════════════════════════════════════════
+   TEMPLATES STYLING — 5 Production Layout Archetypes
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── COMMON UTILITY COMPONENTS ── */
+.airline-logo-box {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0 6px;
+}
+.airline-logo-box img {
+  max-height: 78px;
+  max-width: 480px;
+  object-fit: contain;
+  display: block;
+}
+
+.standard-baggage-pill {
+  background: linear-gradient(180deg, #00367d 0%, #001e52 100%);
+  border: 3px solid #ffffff;
+  border-radius: 9999px;
+  color: #ffffff;
+  font-size: calc(34px * var(--font-scale));
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 5px 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 20, 60, 0.35);
+  margin-top: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TEMPLATE 1: Classic Dual Route & Date Pills
+   ═══════════════════════════════════════════════════════════ */
+.t1-tagline {
+  font-size: calc(27px * var(--font-scale));
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 8px rgba(0, 30, 80, 0.35);
+  margin-left: 80px;
+  margin-bottom: 6px;
+  align-self: flex-start;
+}
+
+.t1-route-capsule {
+  background: linear-gradient(180deg, #00367d 0%, #001e52 100%);
+  border: 3px solid #ffffff;
+  border-radius: 33px;
+  color: #ffffff;
+  font-size: calc(36px * var(--font-scale));
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 4px 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 20, 60, 0.35);
+}
+
+.t1-segments-bar {
+  width: var(--card-width);
+  background: rgba(222, 243, 253, 0.94);
+  border: 2px solid rgba(160, 215, 245, 0.95);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 5px 18px;
+  box-shadow: 0 4px 14px rgba(0, 30, 80, 0.08);
+  margin: 5px 0;
+}
+.t1-segment-cell {
+  flex: 1;
+  text-align: center;
+  color: #002266;
+  line-height: 1.25;
+  padding: 0 4px;
+}
+.t1-segment-code {
+  font-size: calc(16px * var(--font-scale));
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.t1-segment-time {
+  font-size: calc(15px * var(--font-scale));
+  font-weight: 600;
+  color: #002266;
+}
+.t1-segment-vdiv {
+  width: 1.5px;
+  height: 30px;
+  background: rgba(0, 34, 102, 0.3);
+  flex-shrink: 0;
+}
+
+.t1-dp-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.t1-dp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+.t1-dp-date {
+  font-size: calc(26px * var(--font-scale));
+  font-weight: 700;
+  color: #002266;
+  letter-spacing: 0.5px;
+}
+.t1-dp-price {
+  background: #0082db;
+  color: #ffffff;
+  font-size: calc(26px * var(--font-scale));
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 2px 28px;
+  min-width: 170px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  box-shadow: 0 3px 8px rgba(0, 110, 220, 0.28);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TEMPLATE 2: Destination Script & Hero Price Banner
+   ═══════════════════════════════════════════════════════════ */
+.t2-script {
+  font-family: 'Yellowtail', 'Pacifico', 'Caveat', cursive !important;
+  font-size: calc(100px * var(--font-scale));
+  font-weight: 700;
+  color: #fc8b15;
+  line-height: 0.95;
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 0 0 16px rgba(255, 255, 255, 0.9), 0 2px 8px rgba(252, 139, 21, 0.35);
+}
+
+.t2-route-title {
+  font-size: calc(64px * var(--font-scale));
+  font-weight: 800;
+  color: #082f74;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1;
+  text-shadow: 0 2px 8px rgba(8, 47, 116, 0.15);
+  margin-top: 4px;
+}
+
+.t2-timings-box {
+  width: var(--card-width);
+  background: #fc8b15;
+  border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
+  padding: 8px 18px;
+  color: #ffffff;
+  font-size: calc(18px * var(--font-scale));
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.4px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(252, 139, 21, 0.25);
+  margin-top: 8px;
+}
+
+.t2-dates-card {
+  width: var(--card-width);
+  border-top: none !important;
+  border-bottom: none !important;
+  border-radius: 0 !important;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 32px;
+}
+.t2-date-item {
+  font-size: calc(25px * var(--font-scale));
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: 0.5px;
+  line-height: 1.35;
+  padding: 2px 0;
+}
+
+.t2-price-banner {
+  width: var(--card-width);
+  background: #fc8b15;
+  border-radius: 0 0 var(--card-border-radius) var(--card-border-radius);
+  padding: 6px 24px;
+  text-align: center;
+  color: #ffffff;
+  font-size: calc(72px * var(--font-scale));
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 1px;
+  box-shadow: 0 6px 20px rgba(252, 139, 21, 0.35);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TEMPLATE 3: 4-Quadrant Fixed Departures Grid
+   ═══════════════════════════════════════════════════════════ */
+.t3-header-banner {
+  background: linear-gradient(90deg, #be185d 0%, #db2777 100%);
+  color: #ffffff;
+  font-size: calc(36px * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 7px 38px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 18px rgba(190, 24, 93, 0.35);
+  text-align: center;
+}
+
+.t3-quad-grid {
+  width: var(--card-width);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.t3-quad-cell {
+  background: var(--card-bg);
+  border: var(--card-border-width) solid var(--card-border-color);
+  border-radius: var(--card-border-radius);
+  padding: calc(var(--card-padding-y) * 0.85) calc(var(--card-padding-x) * 0.7);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+.t3-quad-logo {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.t3-quad-logo img {
+  height: 36px;
+  max-width: 140px;
+  object-fit: contain;
+}
+
+.t3-quad-title {
+  text-align: center;
+  font-size: calc(26px * var(--font-scale));
+  font-weight: 800;
+  color: #92400e;
+  margin-top: 2px;
+}
+
+.t3-quad-pill {
+  background: #d91424;
+  color: #ffffff;
+  font-size: calc(18px * var(--font-scale));
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 3px 6px;
+  text-align: center;
+  margin: 5px 0 6px;
+}
+
+.t3-quad-dates {
+  font-size: calc(20px * var(--font-scale));
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+.t3-quad-date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 0;
+  border-bottom: 1px dashed #f1f5f9;
+}
+.t3-quad-fare {
+  color: #d91424;
+  font-weight: 800;
+}
+
+.t3-quad-baggage {
+  background: #d91424;
+  color: #ffffff;
+  font-size: calc(16px * var(--font-scale));
+  font-weight: 700;
+  text-align: center;
+  border-radius: 6px;
+  padding: 3px 0;
+  margin-top: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TEMPLATE 4: Dual-Sector Split Layout (AirAsia / Return)
+   ═══════════════════════════════════════════════════════════ */
+.t4-header-banner {
+  background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%);
+  color: #ffffff;
+  font-size: calc(38px * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 36px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 16px rgba(185, 28, 28, 0.35);
+  text-align: center;
+}
+
+.t4-sectors-container {
+  width: var(--card-width);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.t4-sector-card {
+  background: var(--card-bg);
+  border: var(--card-border-width) solid var(--card-border-color);
+  border-radius: var(--card-border-radius);
+  padding: var(--card-padding-y) var(--card-padding-x);
+  box-shadow: var(--card-shadow);
+}
+
+.t4-sector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #fee2e2;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+.t4-sector-tag {
+  background: #b91c1c;
+  color: #ffffff;
+  font-size: calc(18px * var(--font-scale));
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+}
+.t4-sector-flight {
+  font-size: calc(20px * var(--font-scale));
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.t4-sector-dates-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.t4-date-chip {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 4px 8px;
+  text-align: center;
+  font-size: calc(18px * var(--font-scale));
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.t4-hero-price {
+  width: var(--card-width);
+  background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+  border-radius: var(--card-border-radius);
+  color: #ffffff;
+  padding: 10px 24px;
+  text-align: center;
+  margin-top: 10px;
+  box-shadow: 0 8px 24px rgba(185, 28, 28, 0.35);
+}
+.t4-hero-price .label {
+  font-size: calc(20px * var(--font-scale));
+  font-weight: 700;
+  letter-spacing: 2px;
+  opacity: 0.9;
+}
+.t4-hero-price .amount {
+  font-size: calc(64px * var(--font-scale));
+  font-weight: 900;
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TEMPLATE 5: Multi-City Departure Matrix & Inventory Table
+   ═══════════════════════════════════════════════════════════ */
+.t5-header-banner {
+  background: linear-gradient(90deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-size: calc(36px * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 36px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+  text-align: center;
+}
+
+.t5-table-card {
+  width: var(--card-width);
+  background: var(--card-bg);
+  border: var(--card-border-width) solid var(--card-border-color);
+  border-radius: var(--card-border-radius);
+  padding: var(--card-padding-y) var(--card-padding-x);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.t5-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+}
+.t5-table th {
+  background: #0369a1;
+  color: #ffffff;
+  font-size: calc(18px * var(--font-scale));
+  font-weight: 700;
+  padding: 8px 10px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+.t5-table th:first-child { border-radius: 8px 0 0 8px; }
+.t5-table th:last-child { border-radius: 0 8px 8px 0; }
+
+.t5-table tr.data-row td {
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: calc(20px * var(--font-scale));
+  font-weight: 600;
+  padding: 7px 10px;
+  text-align: center;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+.t5-table tr.data-row td:first-child {
+  border-radius: 8px 0 0 8px;
+  border-left: 1px solid #e2e8f0;
+  font-weight: 700;
+  color: #0369a1;
+}
+.t5-table tr.data-row td:last-child {
+  border-radius: 0 8px 8px 0;
+  border-right: 1px solid #e2e8f0;
+  font-weight: 800;
+  color: #b91c1c;
+}
+.t5-table tr.data-row:nth-child(even) td {
+  background: #ffffff;
+}
